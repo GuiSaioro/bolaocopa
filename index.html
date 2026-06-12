@@ -114,7 +114,7 @@
             max-width: 800px;
             margin: 0 auto;
             position: relative;
- z-index: 2;
+            z-index: 2;
         }
 
         .hero-section h1 {
@@ -702,7 +702,7 @@
             SELECOES_COPA.forEach(s => {
                 htmlCamp += `<option value="${s}" ${s === valCampeao ? 'selected' : ''}>${s}</option>`;
             });
-            selCamp.innerHTML = htmlCamp;
+            selCampeao.innerHTML = htmlCamp;
 
             let htmlVice = `<option value="">-- Escolha o 2º Lugar --</option>`;
             SELECOES_COPA.forEach(s => {
@@ -897,7 +897,11 @@
                     }
                 });
 
-                function bundleGrupo(val){ return val ? (val.length === 1 ? 'Grupo ' + val : val) : 'Sem Grupo'; }
+                function bundleGrupo(val){ 
+                    if (!val) return 'Sem Grupo';
+                    let grupoLimpo = val.replace('Grupo ', '').trim();
+                    return 'Grupo ' + grupoLimpo; 
+                }
 
                 let htmlJogosGrupos = "";
                 for (let data in juegosPorData) {
@@ -1099,9 +1103,11 @@
                 statusTextoVisual = '';
             }
 
+            const grupoVisual = jogo.grupo ? (jogo.grupo.includes('Grupo') ? jogo.grupo : 'Grupo ' + jogo.grupo) : 'Mata-Mata';
+
             return `
             <div class="card">
-                <div class="card-header">🕐 ${jogo.hora || ''} | ${jogo.grupo ? 'Grupo ' + jogo.grupo : 'Mata-Mata'} ${statusTextoVisual ? '| ' + statusTextoVisual : ''}</div>
+                <div class="card-header">🕐 ${jogo.hora || ''} | ${grupoVisual} ${statusTextoVisual ? '| ' + statusTextoVisual : ''}</div>
                 <div class="flex-row">
                     <div class="time-box esquerdo"><span class="time-nome">${jogo.timeA || 'A definir'}</span><img src="${getBandeira(jogo.codigoA)}" width="24"></div>
                     <span class="placar-oficial">${jogo.placarA !== undefined ? jogo.placarA : '-'}</span>
