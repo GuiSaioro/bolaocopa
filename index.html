@@ -114,7 +114,7 @@
             max-width: 800px;
             margin: 0 auto;
             position: relative;
-            z-index: 2;
+ z-index: 2;
         }
 
         .hero-section h1 {
@@ -225,7 +225,7 @@
         }
 
         .btn-primary { background: var(--primary-light); color: white; }
-        .btn-primary:hover { background: var(--primary); }
+        .btn-primary:hover { background: var(--text-main); }
         .btn-secondary { background: #e2e8f0; color: #334155; }
         .btn-secondary:hover { background: #cbd5e1; }
 
@@ -327,7 +327,7 @@
         .header-cronograma {
             font-size: 1.25em;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--text-main);
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #f1f5f9;
@@ -415,8 +415,8 @@
         .palpite-box button { margin-left: 5px; padding: 10px 20px; cursor: pointer; border: none; border-radius: 8px; font-size: 0.9em; font-weight: 700; color: white; transition: 0.2s; }
         .btn-confirmar { background-color: #10b981; }
         .btn-confirmar:hover { background-color: #059669; }
-        .btn-editar { background-color: #f59e0b; color: #fff; }
-        .btn-editar:hover { background-color: #d97706; }
+        .btn-editar { background-color: #64748b; color: #fff; }
+        .btn-editar:hover { background-color: #475569; }
         .palpite-box button:disabled, .palpite-box input:disabled { background-color: #e2e8f0; color: #94a3b8!important; cursor: not-allowed; }
 
         table {
@@ -439,21 +439,27 @@
         .lista-item-palpite { padding: 10px 0; border-bottom: 1px dashed #f1f5f9; font-size: 0.9em; display: flex; justify-content: space-between; }
         .input-text { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1em; margin-bottom: 20px; }
         .podium-1 { font-weight: bold; background-color: #fef3c7 !important; color: #92400e; }
+        
+        /* Classe interna para alinhar bandeira + nome na tabela */
+        .tabela-time-celula {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+            padding-left: 12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- CABEÇALHO FIXO (HEADER) -->
     <header class="main-header">
-        <!-- Espaço para Logomarca -->
         <a href="#" class="logo-placeholder">
-            <!-- Renderização do Logo Oficial da Copa 2026 -->
             <img class="logo-icon" src="https://digitalhub.fifa.com/transform/157d23bf-7e13-4d7b-949e-5d27d340987e/WC26_Logo?&io=transform:fill&quality=75" alt="Logo Copa 2026">
             <span>Bolão Copa 2026 Saioro</span>
         </a>
 
-        <!-- Perfil do Utilizador no Canto Superior Direito -->
         <div id="topUserPanel" class="user-top-profile" style="display: none;">
             <div class="user-badge">
                 <span id="uActiveAvatar" class="u-avatar">⚽</span>
@@ -464,7 +470,6 @@
         </div>
     </header>
 
-    <!-- PRIMEIRA DOBRA (HERO SECTION) -->
     <section id="heroSection" class="hero-section" style="display: none;">
         <div class="hero-content">
             <h1>Bolão Oficial da Copa 2026</h1>
@@ -472,7 +477,6 @@
         </div>
     </section>
 
-    <!-- FLUXO DE AUTENTICAÇÃO -->
     <div id="authBlock" class="auth-container" style="display: none;">
         <div id="screenMenu" class="auth-screen active">
             <h2>🏆 Quem é você?</h2>
@@ -505,7 +509,6 @@
         </div>
     </div>
 
-    <!-- JANELA MODAL: SELEÇÃO DE NOVO AVATAR -->
     <div id="modalMudarAvatar" class="modal-avatar">
         <div class="modal-avatar-content">
             <h3 style="color:#1e3a8a; margin-top:0;">🎭 Mudar meu Avatar</h3>
@@ -524,10 +527,8 @@
         </div>
     </div>
 
-    <!-- CORPO DA PÁGINA (CONTEÚDO PRINCIPAL DO BOLÃO) -->
     <main id="mainContent" class="page-container" style="display: none;">
         
-        <!-- Abas de Navegação Fixas/Sticky -->
         <nav class="tabs">
             <button class="tab-btn active" onclick="mudarTab(event, 'aba-ranking')">🥇 Ranking do Bolão</button>
             <button class="tab-btn" onclick="mudarTab(event, 'aba-jogos')">📅 Jogos & Palpites</button>
@@ -535,38 +536,35 @@
             <button class="tab-btn" onclick="mudarTab(event, 'aba-mural')">👥 Palpites da Galera</button>
         </nav>
 
-        <!-- ABA: RANKING DOS JOGADORES -->
         <div id="aba-ranking" class="tab-content" style="display: block;">
             <h2 style="text-align: center; margin-bottom: 25px;">Classificação Geral do Bolão</h2>
             <div id="conteudoRanking">Calculando pontuações em tempo real...</div>
         </div>
 
-        <!-- CONTEÚDO: JOGOS & PALPITES -->
         <div id="aba-jogos" class="tab-content">
             
-            <!-- SEÇÃO: PALPITES DO PÓDIO -->
             <div class="secao-podio-palpites">
                 <div class="header-cronograma" style="border-bottom:none; margin-bottom: 5px;">🥇 Meus Palpites do Pódio Finais</div>
                 <p style="margin: 0 0 10px 0; font-size: 0.9em; color:#64748b;">
-                    Defina quem serão os três primeiros colocados da Copa. Salvamento automático ao alterar! <br>
+                    Defina quem serão os três primeiros colocados da Copa. <br>
                     <span id="podioPrazoAviso" style="color:#dc3545; font-weight: bold;">Palpites permitidos apenas até 17/06/2026.</span>
                 </p>
                 
                 <div class="grid-podio-selects">
                     <div class="podio-form-group">
-                        <label>🥇 Campeão</label>
+                        <label>🥇 1º Lugar (Campeão)</label>
                         <select id="selectCampeao" class="podio-select"></select>
                     </div>
                     <div class="podio-form-group">
-                        <label>🥈 Vice-Campeão</label>
+                        <label>🥈 2º Lugar (Vice)</label>
                         <select id="selectVice" class="podio-select"></select>
                     </div>
                     <div class="podio-form-group">
-                        <label>🥉 Terceiro Colocado</label>
+                        <label>🥉 3º Lugar</label>
                         <select id="selectTerceiro" class="podio-select"></select>
                     </div>
                     <div>
-                        <button id="btnSalvarPodio" class="btn-auth btn-primary" style="margin: 0; padding: 12px; font-size: 0.9em;">💾 Salvar Pódio</button>
+                        <button id="btnSalvarPodio" class="btn-auth btn-primary" style="margin: 0; padding: 12px; font-size: 0.9em;"> 💾 Salvar Pódio</button>
                     </div>
                 </div>
             </div>
@@ -575,13 +573,11 @@
             <div id="mataMataContainer"></div>
         </div>
 
-        <!-- CONTEÚDO: CLASSIFICAÇÃO DA COPA -->
         <div id="aba-tabela" class="tab-content">
             <h2 style="text-align: center; margin-bottom: 25px;">Classificação dos Grupos</h2>
             <div id="conteudoTabela">Carregando classificação...</div>
         </div>
 
-        <!-- CONTEÚDO: MURAL DA GALERA -->
         <div id="aba-mural" class="tab-content">
             <h2 style="text-align: center; margin-bottom: 25px;">Palpites da Galera</h2>
             <div id="listaPalpites">Nenhum palpite enviado ainda...</div>
@@ -610,6 +606,7 @@
         let listaDeJogosGlobais = [];
         let avatarSelecionado = "🧙‍♂️";
         let cacheUsuarios = {};
+        let mapaDeCodigosDeBandeiras = {}; // Cache para armazenar dinamicamente os códigos de bandeiras de cada seleção
 
         const SELECOES_COPA = [
             "Alemanha", "Arábia Saudita", "Argentina", "Argélia", "Austrália", "Áustria", 
@@ -688,24 +685,26 @@
             const valTerceiro = selTerceiro.value || dadosUsuarioLogado?.palpiteTerceiro || "";
 
             const dataLimite = new Date(2026, 5, 18, 0, 0, 0); 
-            const prazoEncerrado = new Date() >= dataLimite;
+            const prazoEncerrado = new Date() >= dataLimite || dadosUsuarioLogado?.podioSalvo === true;
 
             if (prazoEncerrado) {
-                document.getElementById("podioPrazoAviso").innerText = "Prazo encerrado! Os palpites de pódio estão trancados.";
+                document.getElementById("podioPrazoAviso").innerText = "Pódio Salvo / Trancado! Não é mais possível fazer alterações.";
                 selCampeao.disabled = true;
                 selVice.disabled = true;
                 selTerceiro.disabled = true;
                 document.getElementById("btnSalvarPodio").disabled = true;
-                document.getElementById("btnSalvarPodio").innerText = "Trancado";
+                document.getElementById("btnSalvarPodio").innerText = "Salvo e Trancado";
+                document.getElementById("btnSalvarPodio").style.backgroundColor = "#e2e8f0";
+                document.getElementById("btnSalvarPodio").style.color = "#94a3b8";
             }
 
-            let htmlCamp = `<option value="">-- Escolha o Campeão --</option>`;
+            let htmlCamp = `<option value="">-- Escolha o 1º Lugar --</option>`;
             SELECOES_COPA.forEach(s => {
                 htmlCamp += `<option value="${s}" ${s === valCampeao ? 'selected' : ''}>${s}</option>`;
             });
-            selCampeao.innerHTML = htmlCamp;
+            selCamp.innerHTML = htmlCamp;
 
-            let htmlVice = `<option value="">-- Escolha o Vice --</option>`;
+            let htmlVice = `<option value="">-- Escolha o 2º Lugar --</option>`;
             SELECOES_COPA.forEach(s => {
                 if (s !== valCampeao) {
                     htmlVice += `<option value="${s}" ${s === valVice ? 'selected' : ''}>${s}</option>`;
@@ -713,7 +712,7 @@
             });
             selVice.innerHTML = htmlVice;
 
-            let htmlTerceiro = `<option value="">-- Escolha o 3º Colocado --</option>`;
+            let htmlTerceiro = `<option value="">-- Escolha o 3º Lugar --</option>`;
             SELECOES_COPA.forEach(s => {
                 if (s !== valCampeao && s !== valVice) {
                     htmlTerceiro += `<option value="${s}" ${s === valTerceiro ? 'selected' : ''}>${s}</option>`;
@@ -728,6 +727,11 @@
         document.getElementById("btnSalvarPodio").addEventListener("click", async () => {
             if (!nomeUsuario) return alert("Identifique-se primeiro!");
 
+            const dadosUsuarioLogado = cacheUsuarios[nomeUsuario.toLowerCase()];
+            if(dadosUsuarioLogado?.podioSalvo === true) {
+                return alert("❌ Esse pódio já foi salvo e trancado permanentemente!");
+            }
+
             const dataLimite = new Date(2026, 5, 18, 0, 0, 0); 
             if (new Date() >= dataLimite) {
                 return alert("❌ Prazo esgotado! A Copa já começou e não é possível alterar o pódio.");
@@ -741,13 +745,19 @@
                 return alert("Por favor, preencha as 3 posições do pódio antes de salvar!");
             }
 
+            if (!confirm("Atenção! Após salvar o pódio, você NÃO poderá editá-lo novamente. Deseja prosseguir?")) {
+                return;
+            }
+
             try {
                 await updateDoc(doc(db, "usuarios", nomeUsuario), {
                     palpiteCampeao: camp,
                     palpiteVice: vice,
-                    palpiteTerceiro: terc
+                    palpiteTerceiro: terc,
+                    podioSalvo: true
                 });
-                alert("Palpites do Pódio gravados com sucesso!");
+                alert("Pódio salvo com sucesso e bloqueado permanentemente!");
+                window.renderizarCascataPodio();
                 calcularEExibirRanking();
             } catch (err) {
                 console.error(err);
@@ -779,6 +789,7 @@
                     palpiteCampeao: "",
                     palpiteVice: "",
                     palpiteTerceiro: "",
+                    podioSalvo: false,
                     dataCriacao: new Date()
                 });
                 window.entrarComoJogador(nome, avatarSelecionado);
@@ -831,7 +842,7 @@
             palpitesDoUsuarioLogado = {}; todosOsPalpites = []; let gruposPorUsuario = {};
             snap.forEach(docSnap => {
                 const p = docSnap.data(); todosOsPalpites.push(p);
-                if (nomeUsuario && p.usuario === nomeUsuario) palpitesDoUsuarioLogado[p.jogoId] = { a: p.palpiteA, b: p.palpiteB };
+                if (nomeUsuario && p.usuario === nomeUsuario) palpitesDoUsuarioLogado[p.jogoId] = { a: p.palpiteA, b: p.palpiteB, salvo: p.salvo || false };
                 if (!gruposPorUsuario[p.usuario]) gruposPorUsuario[p.usuario] = [];
                 gruposPorUsuario[p.usuario].push(p);
             });
@@ -853,7 +864,15 @@
         const q = query(collection(db, "jogos"), orderBy("rodada"), orderBy("hora"));
         onSnapshot(q, (snapshot) => {
             listaDeJogosGlobais = [];
-            snapshot.forEach(docSnap => { const jogo = docSnap.data(); jogo.id = docSnap.id; listaDeJogosGlobais.push(jogo); });
+            snapshot.forEach(docSnap => { 
+                const jogo = docSnap.data(); 
+                jogo.id = docSnap.id; 
+                listaDeJogosGlobais.push(jogo); 
+                
+                // Popula o mapa auxiliar de bandeiras usando os códigos salvos nos jogos
+                if(jogo.timeA && jogo.codigoA) mapaDeCodigosDeBandeiras[jogo.timeA] = jogo.codigoA;
+                if(jogo.timeB && jogo.codigoB) mapaDeCodigosDeBandeiras[jogo.timeB] = jogo.codigoB;
+            });
 
             window.recarregarCardsDeJogos = () => {
                 let juegosPorData = {}; let jogosPorMataMata = {}; let grupos = {};
@@ -890,11 +909,35 @@
                     htmlMataMata += `<div class="secao-cronograma"><div class="header-cronograma">🏆 ${fase.toUpperCase()}</div><div class="grid-jogos">`;
                     jogosPorMataMata[fase].forEach(j => { htmlMataMata += gerarCard(j); }); htmlMataMata += `</div></div>`;
                 }
+                
                 let htmlTabela = "";
+                const extrairBandeiraTabela = (nomeTime) => {
+                    const cod = mapaDeCodigosDeBandeiras[nomeTime];
+                    return (cod && cod !== 'n/a') ? `https://flagcdn.com/w40/${cod}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
+                };
+
                 for (let nomeGrupo in grupos) {
-                    htmlTabela += `<h3>${nomeGrupo}</h3><table><tr style="background-color: #f2f2f2;"><th>Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>`;
+                    htmlTabela += `<h3>${nomeGrupo}</h3><table><tr style="background-color: #f2f2f2;"><th style="width: 60px;">Pos</th><th style="text-align:left; padding-left:12px;">Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>`;
                     let times = Object.entries(grupos[nomeGrupo]).sort((a, b) => b[1].pts - a[1].pts || b[1].sg - a[1].sg);
-                    times.forEach(([time, s]) => { htmlTabela += `<tr><td style="text-align:left; padding-left:12px; font-weight:bold;">${time}</td><td>${s.j}</td><td>${s.v}</td><td>${s.e}</td><td>${s.d}</td><td>${s.sg}</td><td><strong>${s.pts}</strong></td></tr>`; });
+                    
+                    times.forEach(([time, s], index) => { 
+                        htmlTabela += `
+                        <tr>
+                            <td><strong>${index + 1}º</strong></td>
+                            <td>
+                                <div class="tabela-time-celula">
+                                    <img src="${extrairBandeiraTabela(time)}" width="22" height="15" style="object-fit:cover; border-radius:2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+                                    <span>${time}</span>
+                                </div>
+                            </td>
+                            <td>${s.j}</td>
+                            <td>${s.v}</td>
+                            <td>${s.e}</td>
+                            <td>${s.d}</td>
+                            <td>${s.sg}</td>
+                            <td><strong>${s.pts}</strong></td>
+                        </tr>`; 
+                    });
                     htmlTabela += `</table>`;
                 }
                 document.getElementById("conteudoTabela").innerHTML = htmlTabela;
@@ -913,7 +956,7 @@
                 const usr = cacheUsuarios[chave];
                 pontuacaoJogadores[usr.nome] = {
                     nome: usr.nome, avatar: usr.avatar, totalPontos: 0,
-                    exatos: 0, vencedor: 0, umTime: 0, difGols: 0, bonusPodio: 0
+                    exatos: 0, vencedor: 0, bonusPodio: 0
                 };
             }
 
@@ -924,7 +967,7 @@
                 const jogo = mapaJogos[p.jogoId];
                 if (jogo && jogo.placarA !== undefined && jogo.placarB !== undefined && (jogo.status === 'em andamento' || jogo.status === 'finalizado')) {
                     if (!pontuacaoJogadores[p.usuario]) {
-                        pontuacaoJogadores[p.usuario] = { nome: p.usuario, avatar: "⚽", totalPontos: 0, exatos: 0, vencedor: 0, umTime: 0, difGols: 0, bonusPodio: 0 };
+                        pontuacaoJogadores[p.usuario] = { nome: p.usuario, avatar: "⚽", totalPontos: 0, exatos: 0, vencedor: 0, bonusPodio: 0 };
                     }
 
                     const jA = parseInt(jogo.placarA); const jB = parseInt(jogo.placarB);
@@ -932,11 +975,13 @@
 
                     let pontosDoJogo = 0;
 
+                    // 1. REGLA DO RESULTADO (Placar Exato) -> Ganha +2 pontos se acertar perfeitamente
                     if (pA === jA && pB === jB) {
                         pontosDoJogo += 2;
                         pontuacaoJogadores[p.usuario].exatos++;
                     }
 
+                    // 2. REGRA DO VENCEDOR (Acertar quem ganha ou se empata) -> Ganha +3 pontos
                     const ganhouA_Oficial = jA > jB; const ganhouB_Oficial = jB > jA; const empate_Oficial = jA === jB;
                     const ganhouA_Palpite = pA > pB; const ganhouB_Palpite = pB > pA; const empate_Palpite = pA === pB;
 
@@ -945,20 +990,11 @@
                         pontuacaoJogadores[p.usuario].vencedor++;
                     }
 
-                    if (pA === jA || pB === jB) {
-                        pontosDoJogo += 1;
-                        pontuacaoJogadores[p.usuario].umTime++;
-                    }
-
-                    if ((jA - jB) === (pA - pB)) {
-                        pontosDoJogo += 1;
-                        pontuacaoJogadores[p.usuario].difGols++;
-                    }
-
                     pontuacaoJogadores[p.usuario].totalPontos += pontosDoJogo;
                 }
             });
 
+            // 3. REGRA DO PRIMEIRO, SEGUNDO E TERCEIRO LUGAR (Bônus de pódio final)
             for (let nome in pontuacaoJogadores) {
                 let usrData = cacheUsuarios[nome.toLowerCase()];
                 if (usrData) {
@@ -981,11 +1017,9 @@
                     <tr style="background-color: #0f172a; color: white;">
                         <th style="width: 50px;">Pos</th>
                         <th style="text-align: left; padding-left: 15px;">Jogador</th>
-                        <th>Placar Exato (+2)</th>
+                        <th>Resultado Exato (+2)</th>
                         <th>Vencedor (+3)</th>
-                        <th>Gols Time (+1)</th>
-                        <th>Dif. Gols (+1)</th>
-                        <th>Bônus Finais</th>
+                        <th>Acertar 1º/2º/3º</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -998,8 +1032,6 @@
                     <td style="text-align: left; padding-left: 15px; font-weight: 600;"><span>${j.avatar || '⚽'}</span> ${j.nome}</td>
                     <td>${j.exatos}</td>
                     <td>${j.vencedor}</td>
-                    <td>${j.umTime}</td>
-                    <td>${j.difGols}</td>
                     <td><small style="color:#10b981; font-weight:bold;">+${j.bonusPodio}p</small></td>
                     <td><strong style="font-size: 1.1em; color: var(--text-main);">${j.totalPontos} pts</strong></td>
                 </tr>`;
@@ -1017,25 +1049,51 @@
 
         window.enviarPalpite = async (jogoId, timeA, timeB, dataJogo, horaJogo) => {
             if (!nomeUsuario) return alert("Identifique-se primeiro!");
+            
+            // Verifica se já existia palpite salvo localmente
+            if (palpitesDoUsuarioLogado[jogoId] && palpitesDoUsuarioLogado[jogoId].salvo === true) {
+                return alert("❌ Esse palpite já foi salvo e não pode mais ser alterado!");
+            }
             if (verificarBloqueio(dataJogo, horaJogo)) return alert("Jogo trancado!");
-            const pA = document.getElementById(`palpA_${jogoId}`).value; const pB = document.getElementById(`palpB_${jogoId}`).value;
+            
+            const pA = document.getElementById(`palpA_${jogoId}`).value; 
+            const pB = document.getElementById(`palpB_${jogoId}`).value;
             if (pA === "" || pB === "") return alert("Insira os placares!");
+
+            if (!confirm("Atenção! Uma vez salvo, você não poderá mais editar esse palpite. Confirmar?")) {
+                return;
+            }
+
+            // Desabilita visualmente na hora para evitar duplo clique
+            document.getElementById(`palpA_${jogoId}`).disabled = true;
+            document.getElementById(`palpB_${jogoId}`).disabled = true;
+            const btn = document.querySelector(`button[onclick*='${jogoId}']`);
+            if(btn) { btn.disabled = true; btn.innerText = "Gravando..."; }
 
             try {
                 await setDoc(doc(db, "palpites", `${nomeUsuario}_${jogoId}`), {
-                    usuario: nomeUsuario, jogoId: jogoId, confronto: `${timeA} x ${timeB}`, palpiteA: parseInt(pA), palpiteB: parseInt(pB), data: new Date()
+                    usuario: nomeUsuario, jogoId: jogoId, confronto: `${timeA} x ${timeB}`, palpiteA: parseInt(pA), palpiteB: parseInt(pB), salvo: true, data: new Date()
                 });
-                alert("Confirmado!");
-            } catch (e) { alert("Erro ao salvar."); }
+                alert("Palpite salvo com sucesso e trancado!");
+                if(btn) { btn.innerText = "Salvo"; btn.className = "btn-editar"; }
+            } catch (e) { 
+                alert("Erro ao salvar.");
+                document.getElementById(`palpA_${jogoId}`).disabled = false;
+                document.getElementById(`palpB_${jogoId}`).disabled = false;
+                if(btn) { btn.disabled = false; btn.innerText = "Confirmar"; }
+            }
         };
 
         function gerarCard(jogo) {
             const getBandeira = (c) => (c && c !== 'n/a') ? `https://flagcdn.com/w40/${c}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
-            const estaBloqueado = verificarBloqueio(jogo.data, jogo.hora);
+            
             const palpiteExistente = palpitesDoUsuarioLogado[jogo.id];
+            // Bloqueia caso o tempo do jogo expire OU caso o usuário já tenha marcado como salvo
+            const jaEstaSalvo = palpiteExistente && palpiteExistente.salvo === true;
+            const estaBloqueado = verificarBloqueio(jogo.data, jogo.hora) || jaEstaSalvo;
 
             let statusTextoVisual = jogo.status || '';
-            if (estaBloqueado) {
+            if (verificarBloqueio(jogo.data, jogo.hora)) {
                 statusTextoVisual = 'Encerrado';
             } else if (statusTextoVisual.toLowerCase() === 'agendada') {
                 statusTextoVisual = '';
@@ -1055,8 +1113,8 @@
                     <input type="number" id="palpA_${jogo.id}" placeholder="-" min="0" value="${palpiteExistente ? palpiteExistente.a : ''}" ${estaBloqueado ? 'disabled' : ''}>
                     <span style="color:#cbd5e1;">x</span>
                     <input type="number" id="palpB_${jogo.id}" placeholder="-" min="0" value="${palpiteExistente ? palpiteExistente.b : ''}" ${estaBloqueado ? 'disabled' : ''}>
-                    <button class="${palpiteExistente ? 'btn-editar' : 'btn-confirmar'}" onclick="enviarPalpite('${jogo.id}', '${jogo.timeA?.replace(/'/g, "\\'")}', '${jogo.timeB?.replace(/'/g, "\\'")}', '${jogo.data}', '${jogo.hora}')" ${estaBloqueado ? 'disabled' : ''}>
-                        ${estaBloqueado ? 'Bloqueado' : (palpiteExistente ? 'Editar' : 'Confirmar')}
+                    <button class="${jaEstaSalvo ? 'btn-editar' : 'btn-confirmar'}" onclick="enviarPalpite('${jogo.id}', '${jogo.timeA?.replace(/'/g, "\\'")}', '${jogo.timeB?.replace(/'/g, "\\'")}', '${jogo.data}', '${jogo.hora}')" ${estaBloqueado ? 'disabled' : ''}>
+                        ${verificarBloqueio(jogo.data, jogo.hora) ? 'Bloqueado' : (jaEstaSalvo ? 'Salvo' : 'Salvar')}
                     </button>
                 </div>
             </div>`;
