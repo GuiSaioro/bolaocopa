@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Bolão da Copa 2026</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #0b1a30;
@@ -206,6 +207,7 @@
             z-index: 1000;
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.5);
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -793,6 +795,7 @@
             <button class="tab-btn active" onclick="mudarTab(event, 'aba-ranking')">🥇 Ranking do Bolão</button>
             <button class="tab-btn" onclick="mudarTab(event, 'aba-jogos')">📅 Jogos & Palpites</button>
             <button class="tab-btn" onclick="mudarTab(event, 'aba-tabela')">📊 Tabela da Copa</button>
+            <button class="tab-btn" onclick="mudarTab(event, 'aba-simulador')">🧮 Tabela Simulada</button>
             <button class="tab-btn" onclick="mudarTab(event, 'aba-mural')">👥 Palpites da Galera</button>
         </nav>
 
@@ -834,8 +837,14 @@
         </div>
 
         <div id="aba-tabela" class="tab-content">
-            <h2 style="text-align: center; margin-bottom: 25px;">Classificação dos Grupos</h2>
+            <h2 style="text-align: center; margin-bottom: 25px;">Classificação dos Grupos (Oficial)</h2>
             <div id="conteudoTabela">Carregando classificação...</div>
+        </div>
+
+        <div id="aba-simulador" class="tab-content">
+            <h2 style="text-align: center; margin-bottom: 10px;">Classificação Simulada (Seus Palpites)</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Acompanhe como os grupos ficam com base nos placares que você preencher na aba "Jogos & Palpites"!</p>
+            <div id="conteudoSimulador">Preencha os seus placares para simular os grupos...</div>
         </div>
 
         <div id="aba-mural" class="tab-content">
@@ -866,7 +875,8 @@
         let listaDeJogosGlobais = [];
         let avatarSelecionado = "🧙‍♂️";
         let cacheUsuarios = {};
-        let mapaDeCodigosDeBandeiras = {}; // Cache para armazenar dinamicamente os códigos de bandeiras de cada seleção
+        let mapaDeCodigosDeBandeiras = {};
+        let gruposPorUsuarioGlobais = {}; 
 
         const SELECOES_COPA = [
             "Alemanha", "Arábia Saudita", "Argentina", "Argélia", "Austrália", "Áustria", 
@@ -1098,27 +1108,142 @@
             calcularEExibirRanking();
         });
 
+       window.renderizarMuralDePalpites = () => {
+    const extrairBandeira = (nomeTime) => {
+        const cod = mapaDeCodigosDeBandeiras[nomeTime?.trim()];
+        return (cod && cod !== 'n/a') ? `https://flagcdn.com/w40/${cod}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
+    };
+
+    let htmlMural = "";
+    for (let usr in gruposPorUsuarioGlobais) {
+        const dadosUsr = cacheUsuarios[usr.toLowerCase()];
+        htmlMural += `<div class="usuario-palpites-bloco"><h3><span>${dadosUsr?.avatar || '⚽'}</span> ${usr}</h3>`;
+        gruposPorUsuarioGlobais[usr].forEach(p => {
+            const times = p.confronto.split(' x ');
+            const timeA = times[0] ? times[0].trim() : '';
+            const timeB = times[1] ? times[1].trim() : '';
+            const flagA = extrairBandeira(timeA);
+            const flagB = extrairBandeira(timeB);
+
+            // Layout atualizado: Bandeira | Nome | Placar x Placar | Nome | Bandeira
+            htmlMural += `
+            <div class="lista-item-palpite" style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end;">
+                    <img src="${flagA}" width="24" style="border-radius:2px; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                    <span style="font-weight: 600;">${timeA}</span>
+                </div>
+                
+                <div style="font-weight: 800; background: #f1f5f9; padding: 4px 12px; border-radius: 6px; min-width: 60px; text-align: center;">
+                    ${p.palpiteA} x ${p.palpiteB}
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-start;">
+                    <span style="font-weight: 600;">${timeB}</span>
+                    <img src="${flagB}" width="24" style="border-radius:2px; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
+                </div>
+            </div>`;
+        });
+        htmlMural += `</div>`;
+    }
+    document.getElementById("listaPalpites").innerHTML = htmlMural || "Nenhum palpite enviado ainda...";
+};
+
+        window.atualizarTabelaSimulada = () => {
+            let gruposSimulados = {};
+
+            listaDeJogosGlobais.forEach(jogo => {
+                if (jogo.fase === "grupos" || (!jogo.fase && jogo.grupo)) {
+                    let g = jogo.grupo.includes('Grupo') ? jogo.grupo : 'Grupo ' + jogo.grupo;
+                    if (!gruposSimulados[g]) gruposSimulados[g] = {};
+                    [jogo.timeA, jogo.timeB].forEach(time => {
+                        if (time && !gruposSimulados[g][time]) {
+                            gruposSimulados[g][time] = { pts: 0, j: 0, v: 0, e: 0, d: 0, sg: 0, gp: 0 };
+                        }
+                    });
+                }
+            });
+
+            listaDeJogosGlobais.forEach(jogo => {
+                if (jogo.fase === "grupos" || (!jogo.fase && jogo.grupo)) {
+                    let g = jogo.grupo.includes('Grupo') ? jogo.grupo : 'Grupo ' + jogo.grupo;
+                    
+                    let inputA = document.getElementById(`palpA_${jogo.id}`);
+                    let inputB = document.getElementById(`palpB_${jogo.id}`);
+
+                    let valA = (inputA && inputA.value !== "") ? parseInt(inputA.value) : null;
+                    let valB = (inputB && inputB.value !== "") ? parseInt(inputB.value) : null;
+
+                    if (valA === null && palpitesDoUsuarioLogado[jogo.id] && palpitesDoUsuarioLogado[jogo.id].a !== undefined) {
+                        valA = parseInt(palpitesDoUsuarioLogado[jogo.id].a);
+                    }
+                    if (valB === null && palpitesDoUsuarioLogado[jogo.id] && palpitesDoUsuarioLogado[jogo.id].b !== undefined) {
+                        valB = parseInt(palpitesDoUsuarioLogado[jogo.id].b);
+                    }
+
+                    if (valA !== null && valB !== null && !isNaN(valA) && !isNaN(valB)) {
+                        let tA = gruposSimulados[g][jogo.timeA];
+                        let tB = gruposSimulados[g][jogo.timeB];
+
+                        if (tA && tB) {
+                            tA.j++; tB.j++;
+                            tA.gp += valA; tB.gp += valB;
+                            if (valA > valB) { tA.pts += 3; tA.v++; tB.d++; }
+                            else if (valB > valA) { tB.pts += 3; tB.v++; tA.d++; }
+                            else { tA.pts += 1; tB.pts += 1; tA.e++; tB.e++; }
+                            tA.sg += (valA - valB); tB.sg += (valB - valA);
+                        }
+                    }
+                }
+            });
+
+            let htmlSimulada = "";
+            const extrairBandeiraTabela = (nomeTime) => {
+                const cod = mapaDeCodigosDeBandeiras[nomeTime];
+                return (cod && cod !== 'n/a') ? `https://flagcdn.com/w40/${cod}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
+            };
+
+            for (let nomeGrupo in gruposSimulados) {
+                htmlSimulada += `<h3>${nomeGrupo}</h3><table><tr style="background-color: #f2f2f2;"><th style="width: 60px;">Pos</th><th style="text-align:left; padding-left:12px;">Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>`;
+                
+                let times = Object.entries(gruposSimulados[nomeGrupo]).sort((a, b) => b[1].pts - a[1].pts || b[1].sg - a[1].sg || b[1].gp - a[1].gp);
+                
+                times.forEach(([time, s], index) => { 
+                    htmlSimulada += `
+                    <tr>
+                        <td><strong>${index + 1}º</strong></td>
+                        <td>
+                            <div class="tabela-time-celula">
+                                <img src="${extrairBandeiraTabela(time)}" width="22" height="15" style="object-fit:cover; border-radius:2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+                                <span>${time}</span>
+                            </div>
+                        </td>
+                        <td>${s.j}</td>
+                        <td>${s.v}</td>
+                        <td>${s.e}</td>
+                        <td>${s.d}</td>
+                        <td>${s.sg}</td>
+                        <td><strong>${s.pts}</strong></td>
+                    </tr>`; 
+                });
+                htmlSimulada += `</table>`;
+            }
+            const container = document.getElementById("conteudoSimulador");
+            if (container) container.innerHTML = htmlSimulada || "Nenhum jogo na fase de grupos encontrado.";
+        };
+
         onSnapshot(collection(db, "palpites"), (snap) => {
-            palpitesDoUsuarioLogado = {}; todosOsPalpites = []; let gruposPorUsuario = {};
+            palpitesDoUsuarioLogado = {}; todosOsPalpites = []; gruposPorUsuarioGlobais = {};
             snap.forEach(docSnap => {
                 const p = docSnap.data(); todosOsPalpites.push(p);
                 if (nomeUsuario && p.usuario === nomeUsuario) palpitesDoUsuarioLogado[p.jogoId] = { a: p.palpiteA, b: p.palpiteB, salvo: p.salvo || false };
-                if (!gruposPorUsuario[p.usuario]) gruposPorUsuario[p.usuario] = [];
-                gruposPorUsuario[p.usuario].push(p);
+                if (!gruposPorUsuarioGlobais[p.usuario]) gruposPorUsuarioGlobais[p.usuario] = [];
+                gruposPorUsuarioGlobais[p.usuario].push(p);
             });
 
-            let htmlMural = "";
-            for (let usr in gruposPorUsuario) {
-                const dadosUsr = cacheUsuarios[usr.toLowerCase()];
-                htmlMural += `<div class="usuario-palpites-bloco"><h3><span>${dadosUsr?.avatar || '⚽'}</span> ${usr}</h3>`;
-                gruposPorUsuario[usr].forEach(p => {
-                    htmlMural += `<div class="lista-item-palpite"><span>⚽ <em>${p.confronto}</em></span><strong>${p.palpiteA} x ${p.palpiteB}</strong></div>`;
-                });
-                htmlMural += `</div>`;
-            }
-            document.getElementById("listaPalpites").innerHTML = htmlMural || "Nenhum palpite enviado.";
+            window.renderizarMuralDePalpites();
             if (window.recarregarCardsDeJogos) window.recarregarCardsDeJogos();
             calcularEExibirRanking();
+            if (window.atualizarTabelaSimulada) window.atualizarTabelaSimulada();
         });
 
         const q = query(collection(db, "jogos"), orderBy("rodada"), orderBy("hora"));
@@ -1141,7 +1266,8 @@
                         const g = bundleGrupo(jogo.grupo); if (!grupos[g]) grupos[g] = {};
                         [jogo.timeA, jogo.timeB].forEach(time => { if (time && !grupos[g][time]) grupos[g][time] = { pts: 0, j: 0, v: 0, e: 0, d: 0, sg: 0 }; });
                         if (jogo.status === 'em andamento' || jogo.status === 'finalizado') {
-                            const pA = parseInt(jogo.placarA) || 0; const pB = parseInt(jogo.placarB) || 0;
+                            const pA = isNaN(parseInt(jogo.placarA)) ? 0 : parseInt(jogo.placarA);
+                            const pB = isNaN(parseInt(jogo.placarB)) ? 0 : parseInt(jogo.placarB);
                             if (grupos[g][jogo.timeA] && grupos[g][jogo.timeB]) {
                                 grupos[g][jogo.timeA].j++; grupos[g][jogo.timeB].j++;
                                 if (pA > pB) { grupos[g][jogo.timeA].pts += 3; grupos[g][jogo.timeA].v++; grupos[g][jogo.timeB].d++; }
@@ -1207,8 +1333,11 @@
                 document.getElementById("conteudoTabela").innerHTML = htmlTabela;
                 document.getElementById("placarContainer").innerHTML = htmlJogosGrupos;
                 document.getElementById("mataMataContainer").innerHTML = htmlMataMata;
+                
+                if (window.atualizarTabelaSimulada) window.atualizarTabelaSimulada();
             };
             window.recarregarCardsDeJogos();
+            window.renderizarMuralDePalpites();
             calcularEExibirRanking();
         });
 
@@ -1229,13 +1358,15 @@
 
             todosOsPalpites.forEach(p => {
                 const jogo = mapaJogos[p.jogoId];
-                if (jogo && jogo.placarA !== undefined && jogo.placarB !== undefined && (jogo.status === 'em andamento' || jogo.status === 'finalizado')) {
+                if (jogo && (jogo.status === 'em andamento' || jogo.status === 'finalizado')) {
                     if (!pontuacaoJogadores[p.usuario]) {
                         pontuacaoJogadores[p.usuario] = { nome: p.usuario, avatar: "⚽", totalPontos: 0, exatos: 0, vencedor: 0, bonusPodio: 0 };
                     }
 
-                    const jA = parseInt(jogo.placarA); const jB = parseInt(jogo.placarB);
-                    const pA = parseInt(p.palpiteA); const pB = parseInt(p.palpiteB);
+                    const jA = isNaN(parseInt(jogo.placarA)) ? 0 : parseInt(jogo.placarA);
+                    const jB = isNaN(parseInt(jogo.placarB)) ? 0 : parseInt(jogo.placarB);
+                    const pA = isNaN(parseInt(p.palpiteA)) ? 0 : parseInt(p.palpiteA);
+                    const pB = isNaN(parseInt(p.palpiteB)) ? 0 : parseInt(p.palpiteB);
 
                     let pontosDoJogo = 0;
 
@@ -1363,6 +1494,16 @@
                 statusTextoVisual = '';
             }
 
+            let displayPlacarA = '-';
+            let displayPlacarB = '-';
+            if (jogo.status === 'em andamento' || jogo.status === 'finalizado') {
+                displayPlacarA = isNaN(parseInt(jogo.placarA)) ? '0' : parseInt(jogo.placarA);
+                displayPlacarB = isNaN(parseInt(jogo.placarB)) ? '0' : parseInt(jogo.placarB);
+            } else {
+                if (jogo.placarA !== undefined && jogo.placarA !== "") displayPlacarA = jogo.placarA;
+                if (jogo.placarB !== undefined && jogo.placarB !== "") displayPlacarB = jogo.placarB;
+            }
+
             const grupoVisual = jogo.grupo ? (jogo.grupo.includes('Grupo') ? jogo.grupo : 'Grupo ' + jogo.grupo) : 'Mata-Mata';
 
             return `
@@ -1370,15 +1511,15 @@
                 <div class="card-header">🕐 ${jogo.hora || ''} | ${grupoVisual} ${statusTextoVisual ? '| ' + statusTextoVisual : ''}</div>
                 <div class="flex-row">
                     <div class="time-box esquerdo"><span class="time-nome">${jogo.timeA || 'A definir'}</span><img src="${getBandeira(jogo.codigoA)}" width="24"></div>
-                    <span class="placar-oficial">${jogo.placarA !== undefined ? jogo.placarA : '-'}</span>
+                    <span class="placar-oficial">${displayPlacarA}</span>
                     <span style="color:#94a3b8;">x</span>
-                    <span class="placar-oficial">${jogo.placarB !== undefined ? jogo.placarB : '-'}</span>
+                    <span class="placar-oficial">${displayPlacarB}</span>
                     <div class="time-box direito"><img src="${getBandeira(jogo.codigoB)}" width="24"><span class="time-nome">${jogo.timeB || 'A definir'}</span></div>
                 </div>
                 <div class="palpite-box">
-                    <input type="number" id="palpA_${jogo.id}" placeholder="-" min="0" value="${palpiteExistente ? palpiteExistente.a : ''}" ${estaBloqueado ? 'disabled' : ''}>
+                    <input type="number" id="palpA_${jogo.id}" placeholder="-" min="0" value="${palpiteExistente ? palpiteExistente.a : ''}" ${estaBloqueado ? 'disabled' : ''} oninput="window.atualizarTabelaSimulada()">
                     <span style="color:#cbd5e1;">x</span>
-                    <input type="number" id="palpB_${jogo.id}" placeholder="-" min="0" value="${palpiteExistente ? palpiteExistente.b : ''}" ${estaBloqueado ? 'disabled' : ''}>
+                    <input type="number" id="palpB_${jogo.id}" placeholder="-" min="0" value="${palpiteExistente ? palpiteExistente.b : ''}" ${estaBloqueado ? 'disabled' : ''} oninput="window.atualizarTabelaSimulada()">
                     <button class="${jaEstaSalvo ? 'btn-editar' : 'btn-confirmar'}" onclick="enviarPalpite('${jogo.id}', '${jogo.timeA?.replace(/'/g, "\\'")}', '${jogo.timeB?.replace(/'/g, "\\'")}', '${jogo.data}', '${jogo.hora}')" ${estaBloqueado ? 'disabled' : ''}>
                         ${verificarBloqueio(jogo.data, jogo.hora) ? 'Bloqueado' : (jaEstaSalvo ? 'Salvo' : 'Salvar')}
                     </button>
