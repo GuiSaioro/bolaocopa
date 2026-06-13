@@ -1119,49 +1119,86 @@
             calcularEExibirRanking();
         });
 
+        // --- FUNÇÃO ATUALIZADA AQUI ---
         window.renderizarMuralDePalpites = () => {
             const extrairBandeira = (nomeTime) => {
                 const cod = mapaDeCodigosDeBandeiras[nomeTime?.trim()];
                 return (cod && cod !== 'n/a') ? `https://flagcdn.com/w40/${cod}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
             };
 
+            // 1. Agrupar todos os palpites recebidos pelo ID do jogo correspondente
+            const palpitesPorJogo = {};
+            todosOsPalpites.forEach(p => {
+                if (!palpitesPorJogo[p.jogoId]) palpitesPorJogo[p.jogoId] = [];
+                palpitesPorJogo[p.jogoId].push(p);
+            });
+
+            // 2. Agrupar a lista de jogos globais pelas rodadas
             let htmlMural = "";
-            for (let usr in gruposPorUsuarioGlobais) {
-                const dadosUsr = cacheUsuarios[usr.toLowerCase()];
-                htmlMural += `<div class="usuario-palpites-bloco" style="margin-bottom: 20px;">
-                                <h3 style="border-bottom: 2px solid #e2e8f0; padding-bottom: 5px;">
-                                    <span>${dadosUsr?.avatar || '⚽'}</span> ${usr}
-                                </h3>`;
-                
-                gruposPorUsuarioGlobais[usr].forEach(p => {
-                    const times = p.confronto.split(' x ');
-                    const timeA = times[0] ? times[0].trim() : '';
-                    const timeB = times[1] ? times[1].trim() : '';
+            const jogosPorRodada = {};
+            
+            listaDeJogosGlobais.forEach(jogo => {
+                const rodadaChave = jogo.rodada ? `Dia ${jogo.rodada}` : (jogo.fase ? `Fase: ${jogo.fase.toUpperCase()}` : "Outros Jogos");
+                if (!jogosPorRodada[rodadaChave]) jogosPorRodada[rodadaChave] = [];
+                jogosPorRodada[rodadaChave].push(jogo);
+            });
+
+            // 3. Renderizar o HTML iterando nas rodadas organizadas
+            for (const rodada in jogosPorRodada) {
+                let temPalpiteNaRodada = false;
+                let htmlRodada = `<div class="secao-cronograma" style="margin-bottom: 30px;">
+                                    <div class="header-cronograma">📌${rodada}</div>`;
+
+                jogosPorRodada[rodada].forEach(jogo => {
+                    const palpitesDoJogo = palpitesPorJogo[jogo.id];
+                    // Pula a renderização se ninguém palpitou neste jogo ainda
+                    if (!palpitesDoJogo || palpitesDoJogo.length === 0) return; 
+                    
+                    temPalpiteNaRodada = true;
+                    const timeA = jogo.timeA || 'A definir';
+                    const timeB = jogo.timeB || 'A definir';
                     const flagA = extrairBandeira(timeA);
                     const flagB = extrairBandeira(timeB);
 
-                    htmlMural += `
-                    <div class="lista-item-palpite" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
-                        
-                        <div style="display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-start;">
-                            <img src="${flagA}" width="24" style="border-radius:2px; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
-                            <span style="font-size: 0.9em; font-weight: 600;">${timeA}</span>
-                        </div>
-                        
-                        <div style="font-weight: 800; background: #0f172a; color: white; padding: 4px 10px; border-radius: 6px; min-width: 50px; text-align: center; margin: 0 10px;">
-                            ${p.palpiteA} x ${p.palpiteB}
-                        </div>
+                    // Cabeçalho do confronto
+                    htmlRodada += `
+                    <div class="usuario-palpites-bloco" style="margin-bottom: 20px; border-color: #cbd5e1; background: #fff;">
+                        <h3 style="border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-top: 0; justify-content: center; display: flex; align-items: center; gap: 12px; font-size: 1.15em; color: var(--primary);">
+                            <img src="${flagA}" width="28" style="border-radius:3px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <span>${timeA} <span style="color: #94a3b8; font-weight: 500; margin: 0 5px;">x</span> ${timeB}</span>
+                            <img src="${flagB}" width="28" style="border-radius:3px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 15px;">`;
 
-                        <div style="display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end;">
-                            <span style="font-size: 0.9em; font-weight: 600;">${timeB}</span>
-                            <img src="${flagB}" width="24" style="border-radius:2px; box-shadow: 0 1px 2px rgba(0,0,0,0.2);">
-                        </div>
-                    </div>`;
+                    // Grid dos usuários que palpitaram neste confronto específico
+                    palpitesDoJogo.forEach(p => {
+                        const dadosUsr = cacheUsuarios[p.usuario.toLowerCase()];
+                        const avatar = dadosUsr?.avatar || '⚽';
+                        htmlRodada += `
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all 0.2s;">
+                                <div style="font-size: 0.9em; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                                    <span>${avatar}</span> <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;">${p.usuario}</span>
+                                </div>
+                                <div style="font-weight: 800; background: #0b1a30; color: white; padding: 6px 14px; border-radius: 6px; font-size: 1.1em; letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);">
+                                    ${p.palpiteA} x ${p.palpiteB}
+                                </div>
+                            </div>`;
+                    });
+
+                    htmlRodada += `</div></div>`; // Fecha o grid e o bloco do confronto
                 });
-                htmlMural += `</div>`;
+
+                htmlRodada += `</div>`; // Fecha a seção cronograma
+                
+                // Apenas adiciona ao mural final se houve pelo menos um jogo com palpites na rodada
+                if (temPalpiteNaRodada) {
+                    htmlMural += htmlRodada;
+                }
             }
-            document.getElementById("listaPalpites").innerHTML = htmlMural || "Nenhum palpite enviado ainda...";
+
+            document.getElementById("listaPalpites").innerHTML = htmlMural || "<div style='text-align:center; padding: 40px; color: #64748b; font-weight: 600;'>Nenhum palpite enviado ainda...</div>";
         };
+        // ------------------------------------
 
         window.atualizarTabelaSimulada = () => {
             let gruposSimulados = {};
