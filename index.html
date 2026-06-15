@@ -76,7 +76,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Utilizador no Canto Superior Direito */
         .user-top-profile {
             display: flex;
             align-items: center;
@@ -134,7 +133,7 @@
             transform: translateY(-1px);
         }
 
-        /* --- PRIMEIRA DOBRA (HERO SECTION) --- */
+        /* --- HERO SECTION --- */
         .hero-section {
             background: radial-gradient(circle at top right, #1e3a8a 0%, #020617 100%);
             color: #ffffff;
@@ -192,7 +191,6 @@
             box-sizing: border-box;
         }
 
-        /* Sistema de Abas Fixo/Sticky */
         .tabs {
             display: flex;
             justify-content: center;
@@ -246,7 +244,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Telas de Login / Criação de Usuário */
+        /* Telas de Autenticação */
         .auth-container {
             background: var(--card-bg);
             max-width: 460px;
@@ -346,7 +344,7 @@
             box-shadow: 0 4px 12px rgba(29, 78, 216, 0.2);
         }
 
-        /* Modal Mudar Avatar */
+        /* Modal Avatar */
         .modal-avatar {
             display: none;
             position: fixed;
@@ -368,7 +366,7 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Grid Jogadores Ativos */
+        /* Jogadores Ativos */
         .players-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -418,7 +416,7 @@
             width: 100%; 
         }
 
-        /* Estrutura de Seções, Cards e Tabelas */
+        /* Seções e Cards */
         .secao-cronograma {
             background: var(--card-bg);
             border-radius: var(--radius-lg);
@@ -602,7 +600,7 @@
         .btn-editar:hover { background-color: #475569; }
         .palpite-box button:disabled, .palpite-box input:disabled { background-color: #e2e8f0; color: #94a3b8!important; cursor: not-allowed; box-shadow: none; transform: none; }
 
-        /* --- TABELAS REFORMULADAS --- */
+        /* --- TABELAS --- */
         table {
             border-collapse: separate;
             border-spacing: 0;
@@ -658,16 +656,6 @@
             font-weight: 800;
         }
         
-        .lista-item-palpite { 
-            padding: 12px 4px; 
-            border-bottom: 1px dashed #e2e8f0; 
-            font-size: 0.95em; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-        }
-        .lista-item-palpite:last-child { border-bottom: none; }
-        
         .input-text { 
             width: 100%; 
             padding: 14px; 
@@ -699,17 +687,109 @@
             filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
         }
 
-        h2 {
+        h2, h3 {
             font-weight: 800;
             letter-spacing: -0.5px;
             color: var(--primary);
         }
 
-        h3 {
+        h3 { margin-top: 30px; margin-bottom: 15px; }
+
+        /* --- BRACKET MATA-MATA HORIZONTAL --- */
+        .bracket-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            padding: 30px 20px;
+            margin-bottom: 35px;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: var(--radius-lg);
+            border: 1px solid #cbd5e1;
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.02);
+            box-sizing: border-box;
+        }
+
+        .bracket-container {
+            display: flex;
+            gap: 40px;
+            align-items: stretch;
+            width: max-content;
+            margin: 0 auto;
+        }
+
+        .bracket-column {
+            display: flex;
+            flex-direction: column;
+            width: 340px;
+            justify-content: space-around;
+        }
+
+        .bracket-column-header {
+            font-size: 1.1em;
             font-weight: 800;
-            color: var(--primary);
-            margin-top: 30px;
-            margin-bottom: 15px;
+            color: white;
+            background: linear-gradient(90deg, #020617 0%, #0b1a30 100%);
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+        }
+
+        .bracket-games-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            flex-grow: 1;
+            gap: 20px;
+        }
+
+        /* Linhas Conectoras do Mata-Mata */
+        .bracket-games-list .card {
+            position: relative;
+            margin: 10px 0;
+        }
+
+        /* Linha saindo para a direita (exceto na última fase) */
+        .bracket-column:not(:last-child) .bracket-games-list .card::after {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            width: 20px;
+            height: 2px;
+            background-color: #94a3b8;
+            z-index: 2;
+        }
+
+        /* Linha chegando pela esquerda (exceto na primeira fase) */
+        .bracket-column:not(:first-child) .bracket-games-list .card::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            width: 20px;
+            height: 2px;
+            background-color: #94a3b8;
+            z-index: 2;
+        }
+
+        /* Conector vertical unindo as chaves (a cada 2 cards) */
+        .bracket-column:not(:last-child) .bracket-games-list {
+            position: relative;
+        }
+        .bracket-column:not(:last-child) .bracket-games-list > div:nth-child(odd)::after {
+            content: '';
+            position: absolute;
+            right: -22px;
+            top: 50%;
+            width: 2px;
+            height: calc(100% + 20px); /* Aproximação para unir com o card de baixo */
+            background-color: #94a3b8;
+            z-index: 1;
         }
     </style>
 </head>
@@ -756,7 +836,7 @@
 
             <p style="margin-bottom:5px; font-weight:bold; color: #1e3a8a;">Escolha seu Avatar:</p>
             <div class="avatar-grid">
-                <div class="avatar-option selected" onclick="selectAvatar(this, '🧙‍♂️')">🧙‍♂️</div>
+                <div class="avatar-option selected" onclick="selectAvatar(this, '🧙\u200D♂️')">🧙‍♂️</div>
                 <div class="avatar-option" onclick="selectAvatar(this, '🥷')">🥷</div>
                 <div class="avatar-option" onclick="selectAvatar(this, '🦁')">🦁</div>
                 <div class="avatar-option" onclick="selectAvatar(this, '🦅')">🦅</div>
@@ -776,7 +856,7 @@
             <h3 style="color:#1e3a8a; margin-top:0;">🎭 Mudar meu Avatar</h3>
             <p style="font-size:0.9em; color:#64748b;">Escolha uma nova figura abaixo para atualizar seu perfil:</p>
             <div class="avatar-grid">
-                <div class="avatar-option" onclick="atualizarAvatarRemoto('🧙‍♂️')">🧙‍♂️</div>
+                <div class="avatar-option" onclick="atualizarAvatarRemoto('🧙\u200D♂️')">🧙‍♂️</div>
                 <div class="avatar-option" onclick="atualizarAvatarRemoto('🥷')">🥷</div>
                 <div class="avatar-option" onclick="atualizarAvatarRemoto('🦁')">🦁</div>
                 <div class="avatar-option" onclick="atualizarAvatarRemoto('🦅')">🦅</div>
@@ -833,6 +913,8 @@
             </div>
 
             <div id="placarContainer">Carregando jogos...</div>
+            
+            <h2 style="margin: 40px 0 20px 0; display: flex; align-items: center; gap: 10px;">🏆 Fase Mata-Mata (Chaveamento)</h2>
             <div id="mataMataContainer"></div>
         </div>
 
@@ -870,15 +952,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Estado Global da Aplicação
         let palpitesDoUsuarioLogado = {};
-        window.palpitesRascunho = {}; // NOVO: Armazena o que o usuário digita na hora
-
+        window.palpitesRascunho = {}; 
         let todosOsPalpites = [];
         let listaDeJogosGlobais = [];
-        let avatarSelecionado = "🧙‍♂️";
+        let avatarSelecionado = "🧙\u200D♂️";
         let cacheUsuarios = {};
         let mapaDeCodigosDeBandeiras = {};
         let gruposPorUsuarioGlobais = {}; 
+        let RESULTADO_COPA_FINAL = { campeao: "", vice: "", terceiro: "" };
+
+        const nomeUsuario = localStorage.getItem("nomeBolao");
+        const avatarUsuario = localStorage.getItem("avatarBolao") || "⚽";
 
         const SELECOES_COPA = [
             "Alemanha", "Arábia Saudita", "Argentina", "Argélia", "Austrália", "Áustria", 
@@ -889,197 +975,7 @@
             "Suécia", "Suíça", "Tunísia", "Uruguai"
         ].sort();
 
-        let RESULTADO_COPA_FINAL = { campeao: "", vice: "", terceiro: "" };
-
-        // Função para gravar palpites não salvos (rascunhos)
-        window.armazenarRascunho = (jogoId) => {
-            const inputA = document.getElementById(`palpA_${jogoId}`);
-            const inputB = document.getElementById(`palpB_${jogoId}`);
-            if (inputA && inputB) {
-                window.palpitesRascunho[jogoId] = { a: inputA.value, b: inputB.value };
-            }
-        };
-
-        onSnapshot(doc(db, "configuracoes", "podioOficial"), (docSnap) => {
-            if (docSnap.exists()) {
-                RESULTADO_COPA_FINAL = docSnap.data();
-                calcularEExibirRanking();
-            }
-        });
-
-        window.showScreen = (screenId) => {
-            document.querySelectorAll('.auth-screen').forEach(el => el.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        };
-
-        window.selectAvatar = (el, avatarStr) => {
-            document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
-            el.classList.add('selected');
-            avatarSelecionado = avatarStr;
-        };
-
-        window.abrirModalAvatar = () => {
-            document.getElementById("modalMudarAvatar").style.display = "flex";
-        };
-
-        window.fecharModalAvatar = () => {
-            document.getElementById("modalMudarAvatar").style.display = "none";
-        };
-
-        window.atualizarAvatarRemoto = async (novoAvatar) => {
-            if (!nomeUsuario) return;
-            try {
-                await updateDoc(doc(db, "usuarios", nomeUsuario), {
-                    avatar: novoAvatar
-                });
-                localStorage.setItem("avatarBolao", novoAvatar);
-                document.getElementById("uActiveAvatar").innerText = novoAvatar;
-                window.fecharModalAvatar();
-            } catch (err) {
-                console.error("Erro ao atualizar o avatar: ", err);
-                alert("Não foi possível atualizar o avatar agora.");
-            }
-        };
-
-        window.mudarTab = (evt, tabId) => {
-            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).style.display = 'block';
-            evt.currentTarget.classList.add('active');
-            
-            if (tabId === 'aba-jogos') {
-                window.renderizarCascataPodio();
-            }
-        };
-
-        window.renderizarCascataPodio = () => {
-            const selCampeao = document.getElementById("selectCampeao");
-            const selVice = document.getElementById("selectVice");
-            const selTerceiro = document.getElementById("selectTerceiro");
-
-            if (!selCampeao || !nomeUsuario) return;
-
-            const dadosUsuarioLogado = cacheUsuarios[nomeUsuario.toLowerCase()];
-            
-            const valCampeao = selCampeao.value || dadosUsuarioLogado?.palpiteCampeao || "";
-            const valVice = selVice.value || dadosUsuarioLogado?.palpiteVice || "";
-            const valTerceiro = selTerceiro.value || dadosUsuarioLogado?.palpiteTerceiro || "";
-
-            const dataLimite = new Date(2026, 5, 18, 0, 0, 0); 
-            const prazoEncerrado = new Date() >= dataLimite || dadosUsuarioLogado?.podioSalvo === true;
-
-            if (prazoEncerrado) {
-                document.getElementById("podioPrazoAviso").innerText = "Pódio Salvo / Trancado! Não é mais possível fazer alterações.";
-                selCampeao.disabled = true;
-                selVice.disabled = true;
-                selTerceiro.disabled = true;
-                document.getElementById("btnSalvarPodio").disabled = true;
-                document.getElementById("btnSalvarPodio").innerText = "Salvo e Trancado";
-                document.getElementById("btnSalvarPodio").style.backgroundColor = "#e2e8f0";
-                document.getElementById("btnSalvarPodio").style.color = "#94a3b8";
-            }
-
-            let htmlCamp = `<option value="">-- Escolha o 1º Lugar --</option>`;
-            SELECOES_COPA.forEach(s => {
-                htmlCamp += `<option value="${s}" ${s === valCampeao ? 'selected' : ''}>${s}</option>`;
-            });
-            selCampeao.innerHTML = htmlCamp;
-
-            let htmlVice = `<option value="">-- Escolha o 2º Lugar --</option>`;
-            SELECOES_COPA.forEach(s => {
-                if (s !== valCampeao) {
-                    htmlVice += `<option value="${s}" ${s === valVice ? 'selected' : ''}>${s}</option>`;
-                }
-            });
-            selVice.innerHTML = htmlVice;
-
-            let htmlTerceiro = `<option value="">-- Escolha o 3º Lugar --</option>`;
-            SELECOES_COPA.forEach(s => {
-                if (s !== valCampeao && s !== valVice) {
-                    htmlTerceiro += `<option value="${s}" ${s === valTerceiro ? 'selected' : ''}>${s}</option>`;
-                }
-            });
-            selTerceiro.innerHTML = htmlTerceiro;
-        };
-
-        document.getElementById("selectCampeao").addEventListener("change", () => window.renderizarCascataPodio());
-        document.getElementById("selectVice").addEventListener("change", () => window.renderizarCascataPodio());
-
-        document.getElementById("btnSalvarPodio").addEventListener("click", async () => {
-            if (!nomeUsuario) return alert("Identifique-se primeiro!");
-
-            const dadosUsuarioLogado = cacheUsuarios[nomeUsuario.toLowerCase()];
-            if(dadosUsuarioLogado?.podioSalvo === true) {
-                return alert("❌ Esse pódio já foi salvo e trancado permanentemente!");
-            }
-
-            const dataLimite = new Date(2026, 5, 18, 0, 0, 0); 
-            if (new Date() >= dataLimite) {
-                return alert("❌ Prazo esgotado! A Copa já começou e não é possível alterar o pódio.");
-            }
-
-            const camp = document.getElementById("selectCampeao").value;
-            const vice = document.getElementById("selectVice").value;
-            const terc = document.getElementById("selectTerceiro").value;
-
-            if (!camp || !vice || !terc) {
-                return alert("Por favor, preencha as 3 posições do pódio antes de salvar!");
-            }
-
-            if (!confirm("Atenção! Após salvar o pódio, você NÃO poderá editá-lo novamente. Deseja prosseguir?")) {
-                return;
-            }
-
-            try {
-                await updateDoc(doc(db, "usuarios", nomeUsuario), {
-                    palpiteCampeao: camp,
-                    palpiteVice: vice,
-                    palpiteTerceiro: terc,
-                    podioSalvo: true
-                });
-                alert("Pódio salvo com sucesso e bloqueado permanentemente!");
-                window.renderizarCascataPodio();
-                calcularEExibirRanking();
-            } catch (err) {
-                console.error(err);
-                alert("Erro ao salvar os seus palpites de pódio.");
-            }
-        });
-
-        window.entrarComoJogador = (nome, avatar) => {
-            localStorage.setItem("nomeBolao", nome);
-            localStorage.setItem("avatarBolao", avatar);
-            window.location.reload();
-        };
-
-        window.sair = () => {
-            localStorage.removeItem("nomeBolao");
-            localStorage.removeItem("avatarBolao");
-            window.location.reload();
-        };
-
-        document.getElementById("btnSalvarJogador").addEventListener("click", async () => {
-            const nome = document.getElementById("newPlayerName").value.trim();
-            if (!nome) return alert("Por favor, insira um nome válido!");
-            if (cacheUsuarios[nome.toLowerCase()]) return alert("Este nome já está cadastrado!");
-
-            try {
-                await setDoc(doc(db, "usuarios", nome), {
-                    nome: nome,
-                    avatar: avatarSelecionado,
-                    palpiteCampeao: "",
-                    palpiteVice: "",
-                    palpiteTerceiro: "",
-                    podioSalvo: false,
-                    dataCriacao: new Date()
-                });
-                window.entrarComoJogador(nome, avatarSelecionado);
-            } catch (err) { console.error(err); }
-        });
-
-        const nomeUsuario = localStorage.getItem("nomeBolao");
-        const avatarUsuario = localStorage.getItem("avatarBolao") || "⚽";
-
+        // Inicialização de Telas Base
         if (nomeUsuario) {
             document.getElementById("authBlock").style.display = "none";
             document.getElementById("mainContent").style.display = "block";
@@ -1094,8 +990,25 @@
             document.getElementById("topUserPanel").style.display = "none";
         }
 
+        window.armazenarRascunho = (jogoId) => {
+            const inputA = document.getElementById(`palpA_${jogoId}`);
+            const inputB = document.getElementById(`palpB_${jogoId}`);
+            if (inputA && inputB) {
+                window.palpitesRascunho[jogoId] = { a: inputA.value, b: inputB.value };
+            }
+        };
+
+        // Listeners Firestore
+        onSnapshot(doc(db, "configuracoes", "podioOficial"), (docSnap) => {
+            if (docSnap.exists()) {
+                RESULTADO_COPA_FINAL = docSnap.data();
+                calcularEExibirRanking();
+            }
+        });
+
         onSnapshot(collection(db, "usuarios"), (snap) => {
-            let htmlBotoes = ""; cacheUsuarios = {};
+            let htmlBotoes = ""; 
+            cacheUsuarios = {};
             snap.forEach(docSnap => {
                 const u = docSnap.data();
                 if (u.nome) {
@@ -1119,21 +1032,294 @@
             calcularEExibirRanking();
         });
 
-        // --- FUNÇÃO ATUALIZADA AQUI ---
+        onSnapshot(collection(db, "palpites"), (snap) => {
+            palpitesDoUsuarioLogado = {}; 
+            todosOsPalpites = []; 
+            gruposPorUsuarioGlobais = {};
+            snap.forEach(docSnap => {
+                const p = docSnap.data(); 
+                todosOsPalpites.push(p);
+                if (nomeUsuario && p.usuario === nomeUsuario) palpitesDoUsuarioLogado[p.jogoId] = { a: p.palpiteA, b: p.palpiteB, salvo: p.salvo || false };
+                if (!gruposPorUsuarioGlobais[p.usuario]) gruposPorUsuarioGlobais[p.usuario] = [];
+                gruposPorUsuarioGlobais[p.usuario].push(p);
+            });
+
+            window.renderizarMuralDePalpites();
+            if (window.recarregarCardsDeJogos) window.recarregarCardsDeJogos();
+            calcularEExibirRanking();
+            if (window.atualizarTabelaSimulada) window.atualizarTabelaSimulada();
+        });
+
+        const q = query(collection(db, "jogos"), orderBy("rodada"), orderBy("hora"));
+        onSnapshot(q, (snapshot) => {
+            listaDeJogosGlobais = [];
+            snapshot.forEach(docSnap => { 
+                const jogo = docSnap.data(); 
+                jogo.id = docSnap.id; 
+                listaDeJogosGlobais.push(jogo); 
+                
+                if(jogo.timeA && jogo.codigoA) mapaDeCodigosDeBandeiras[jogo.timeA] = jogo.codigoA;
+                if(jogo.timeB && jogo.codigoB) mapaDeCodigosDeBandeiras[jogo.timeB] = jogo.codigoB;
+            });
+
+            window.recarregarCardsDeJogos = () => {
+                const activeId = document.activeElement ? document.activeElement.id : null;
+                const selectionStart = document.activeElement ? document.activeElement.selectionStart : null;
+
+                // Modificação 1: Agrupar por 'Grupo' em vez de 'Data'
+                let jogosPorGrupo = {}; 
+                let jogosPorMataMata = {}; 
+                let grupos = {};
+
+                listaDeJogosGlobais.forEach((jogo) => {
+                    if (jogo.fase === "grupos" || (!jogo.fase && jogo.grupo)) {
+                        const g = bundleGrupo(jogo.grupo); 
+                        if (!grupos[g]) grupos[g] = {};
+                        if (!jogosPorGrupo[g]) jogosPorGrupo[g] = [];
+
+                        [jogo.timeA, jogo.timeB].forEach(time => { if (time && !grupos[g][time]) grupos[g][time] = { pts: 0, j: 0, v: 0, e: 0, d: 0, sg: 0 }; });
+                        
+                        if (jogo.status === 'em andamento' || jogo.status === 'finalizado') {
+                            const pA = isNaN(parseInt(jogo.placarA)) ? 0 : parseInt(jogo.placarA);
+                            const pB = isNaN(parseInt(jogo.placarB)) ? 0 : parseInt(jogo.placarB);
+                            if (grupos[g][jogo.timeA] && grupos[g][jogo.timeB]) {
+                                grupos[g][jogo.timeA].j++; grupos[g][jogo.timeB].j++;
+                                if (pA > pB) { grupos[g][jogo.timeA].pts += 3; grupos[g][jogo.timeA].v++; grupos[g][jogo.timeB].d++; }
+                                else if (pB > pA) { grupos[g][jogo.timeB].pts += 3; grupos[g][jogo.timeB].v++; grupos[g][jogo.timeA].d++; }
+                                else { grupos[g][jogo.timeA].pts += 1; grupos[g][jogo.timeB].pts += 1; grupos[g][jogo.timeA].e++; grupos[g][jogo.timeB].e++; }
+                                grupos[g][jogo.timeA].sg += (pA - pB); grupos[g][jogo.timeB].sg += (pB - pA);
+                            }
+                        }
+                        
+                        jogosPorGrupo[g].push(jogo);
+                    } else if (jogo.fase) {
+                        if (!jogosPorMataMata[jogo.fase]) jogosPorMataMata[jogo.fase] = []; 
+                        jogosPorMataMata[jogo.fase].push(jogo);
+                    }
+                });
+
+                function bundleGrupo(val){ 
+                    if (!val) return 'Sem Grupo';
+                    let grupoLimpo = val.replace('Grupo ', '').trim();
+                    return 'Grupo ' + grupoLimpo; 
+                }
+
+                let htmlJogosGrupos = "";
+                // Ordena alfabeticamente para exibir Grupo A, Grupo B, etc.
+                let gruposOrdenados = Object.keys(jogosPorGrupo).sort();
+                gruposOrdenados.forEach(grupo => {
+                    htmlJogosGrupos += `<div class="secao-cronograma"><div class="header-cronograma">📊 ${grupo}</div><div class="grid-jogos">`;
+                    jogosPorGrupo[grupo].forEach(j => { htmlJogosGrupos += gerarCard(j); }); 
+                    htmlJogosGrupos += `</div></div>`;
+                });
+
+                // Modificação 2: Ajuste no HTML do Mata-Mata para a estrutura horizontal contínua
+                let htmlMataMata = `<div class="bracket-wrapper"><div class="bracket-container">`;
+                const ordemFases = ["16", "oitavas", "quartas", "semi", "terceiro", "final"];
+                let fasesOrdenadas = Object.keys(jogosPorMataMata).sort((a, b) => {
+                    let idxA = ordemFases.findIndex(f => a.toLowerCase().includes(f));
+                    let idxB = ordemFases.findIndex(f => b.toLowerCase().includes(f));
+                    if (idxA === -1) idxA = 99;
+                    if (idxB === -1) idxB = 99;
+                    return idxA - idxB;
+                });
+
+                fasesOrdenadas.forEach(fase => {
+                    htmlMataMata += `
+                    <div class="bracket-column">
+                        <div class="bracket-column-header">🏆 ${fase.toUpperCase()}</div>
+                        <div class="bracket-games-list">`;
+                    jogosPorMataMata[fase].forEach(j => { htmlMataMata += gerarCard(j); });
+                    htmlMataMata += `</div></div>`;
+                });
+                htmlMataMata += `</div></div>`;
+                
+                let htmlTabela = "";
+                const extrairBandeiraTabela = (nomeTime) => {
+                    const cod = mapaDeCodigosDeBandeiras[nomeTime];
+                    return (cod && cod !== 'n/a') ? `https://flagcdn.com/w40/${cod}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
+                };
+
+                let gruposParaTabela = Object.keys(grupos).sort();
+                gruposParaTabela.forEach(nomeGrupo => {
+                    htmlTabela += `<h3>${nomeGrupo}</h3><table><tr style="background-color: #f2f2f2;"><th style="width: 60px;">Pos</th><th style="text-align:left; padding-left:12px;">Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>`;
+                    let times = Object.entries(grupos[nomeGrupo]).sort((a, b) => b[1].pts - a[1].pts || b[1].sg - a[1].sg);
+                    
+                    times.forEach(([time, s], index) => { 
+                        htmlTabela += `
+                        <tr>
+                            <td><strong>${index + 1}º</strong></td>
+                            <td>
+                                <div class="tabela-time-celula">
+                                    <img src="${extrairBandeiraTabela(time)}" width="22" height="15" style="object-fit:cover; border-radius:2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+                                    <span>${time}</span>
+                                </div>
+                            </td>
+                            <td>${s.j}</td>
+                            <td>${s.v}</td>
+                            <td>${s.e}</td>
+                            <td>${s.d}</td>
+                            <td>${s.sg}</td>
+                            <td><strong>${s.pts}</strong></td>
+                        </tr>`; 
+                    });
+                    htmlTabela += `</table>`;
+                });
+
+                document.getElementById("conteudoTabela").innerHTML = htmlTabela;
+                document.getElementById("placarContainer").innerHTML = htmlJogosGrupos;
+                document.getElementById("mataMataContainer").innerHTML = htmlMataMata;
+                
+                if (window.atualizarTabelaSimulada) window.atualizarTabelaSimulada();
+
+                if (activeId) {
+                    const el = document.getElementById(activeId);
+                    if (el) {
+                        el.focus();
+                        if (selectionStart !== null) el.selectionStart = el.selectionEnd = selectionStart;
+                    }
+                }
+            };
+
+            window.recarregarCardsDeJogos();
+            window.renderizarMuralDePalpites();
+            calcularEExibirRanking();
+        });
+
+        window.showScreen = (screenId) => {
+            document.querySelectorAll('.auth-screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        };
+
+        window.selectAvatar = (el, avatarStr) => {
+            document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            avatarSelecionado = avatarStr;
+        };
+
+        window.abrirModalAvatar = () => { document.getElementById("modalMudarAvatar").style.display = "flex"; };
+        window.fecharModalAvatar = () => { document.getElementById("modalMudarAvatar").style.display = "none"; };
+
+        window.atualizarAvatarRemoto = async (novoAvatar) => {
+            if (!nomeUsuario) return;
+            try {
+                await updateDoc(doc(db, "usuarios", nomeUsuario), { avatar: novoAvatar });
+                localStorage.setItem("avatarBolao", novoAvatar);
+                document.getElementById("uActiveAvatar").innerText = novoAvatar;
+                window.fecharModalAvatar();
+            } catch (err) {
+                console.error("Erro ao atualizar o avatar: ", err);
+                alert("Não foi possível atualizar o avatar agora.");
+            }
+        };
+
+        window.mudarTab = (evt, tabId) => {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
+            evt.currentTarget.classList.add('active');
+            if (tabId === 'aba-jogos') window.renderizarCascataPodio();
+        };
+
+        window.renderizarCascataPodio = () => {
+            const selCampeao = document.getElementById("selectCampeao");
+            const selVice = document.getElementById("selectVice");
+            const selTerceiro = document.getElementById("selectTerceiro");
+
+            if (!selCampeao || !nomeUsuario) return;
+
+            const dadosUsuarioLogado = cacheUsuarios[nomeUsuario.toLowerCase()];
+            const valCampeao = selCampeao.value || dadosUsuarioLogado?.palpiteCampeao || "";
+            const valVice = selVice.value || dadosUsuarioLogado?.palpiteVice || "";
+            const valTerceiro = selTerceiro.value || dadosUsuarioLogado?.palpiteTerceiro || "";
+
+            const dataLimite = new Date(2026, 5, 18, 0, 0, 0); 
+            const prazoEncerrado = new Date() >= dataLimite || dadosUsuarioLogado?.podioSalvo === true;
+
+            if (prazoEncerrado) {
+                document.getElementById("podioPrazoAviso").innerText = "Pódio Salvo / Trancado! Não é mais possível fazer alterações.";
+                selCampeao.disabled = true; selVice.disabled = true; selTerceiro.disabled = true;
+                const btn = document.getElementById("btnSalvarPodio");
+                btn.disabled = true; btn.innerText = "Salvo e Trancado";
+                btn.style.backgroundColor = "#e2e8f0"; btn.style.color = "#94a3b8";
+            }
+
+            let htmlCamp = `<option value="">-- Escolha o 1º Lugar --</option>`;
+            SELECOES_COPA.forEach(s => { htmlCamp += `<option value="${s}" ${s === valCampeao ? 'selected' : ''}>${s}</option>`; });
+            selCampeao.innerHTML = htmlCamp;
+
+            let htmlVice = `<option value="">-- Escolha o 2º Lugar --</option>`;
+            SELECOES_COPA.forEach(s => { if (s !== valCampeao) htmlVice += `<option value="${s}" ${s === valVice ? 'selected' : ''}>${s}</option>`; });
+            selVice.innerHTML = htmlVice;
+
+            let htmlTerceiro = `<option value="">-- Escolha o 3º Lugar --</option>`;
+            SELECOES_COPA.forEach(s => { if (s !== valCampeao && s !== valVice) htmlTerceiro += `<option value="${s}" ${s === valTerceiro ? 'selected' : ''}>${s}</option>`; });
+            selTerceiro.innerHTML = htmlTerceiro;
+        };
+
+        document.getElementById("selectCampeao").addEventListener("change", () => window.renderizarCascataPodio());
+        document.getElementById("selectVice").addEventListener("change", () => window.renderizarCascataPodio());
+
+        document.getElementById("btnSalvarPodio").addEventListener("click", async () => {
+            if (!nomeUsuario) return alert("Identifique-se primeiro!");
+            const dadosUsuarioLogado = cacheUsuarios[nomeUsuario.toLowerCase()];
+            if(dadosUsuarioLogado?.podioSalvo === true) return alert("❌ Esse pódio já foi salvo e trancado permanentemente!");
+
+            const dataLimite = new Date(2026, 5, 18, 0, 0, 0); 
+            if (new Date() >= dataLimite) return alert("❌ Prazo esgotado! A Copa já começou.");
+
+            const camp = document.getElementById("selectCampeao").value;
+            const vice = document.getElementById("selectVice").value;
+            const terc = document.getElementById("selectTerceiro").value;
+
+            if (!camp || !vice || !terc) return alert("Por favor, preencha as 3 posições do pódio antes de salvar!");
+            if (!confirm("Atenção! Após salvar o pódio, você NÃO poderá editá-lo novamente. Deseja prosseguir?")) return;
+
+            try {
+                await updateDoc(doc(db, "usuarios", nomeUsuario), { palpiteCampeao: camp, palpiteVice: vice, palpiteTerceiro: terc, podioSalvo: true });
+                alert("Pódio salvo com sucesso e bloqueado permanentemente!");
+                window.renderizarCascataPodio();
+                calcularEExibirRanking();
+            } catch (err) { alert("Erro ao salvar os seus palpites de pódio."); }
+        });
+
+        window.entrarComoJogador = (nome, avatar) => {
+            localStorage.setItem("nomeBolao", nome);
+            localStorage.setItem("avatarBolao", avatar);
+            window.location.reload();
+        };
+
+        window.sair = () => {
+            localStorage.removeItem("nomeBolao");
+            localStorage.removeItem("avatarBolao");
+            window.location.reload();
+        };
+
+        document.getElementById("btnSalvarJogador").addEventListener("click", async () => {
+            const nome = document.getElementById("newPlayerName").value.trim();
+            if (!nome) return alert("Por favor, insira um nome válido!");
+            if (cacheUsuarios[nome.toLowerCase()]) return alert("Este nome já está cadastrado!");
+
+            try {
+                await setDoc(doc(db, "usuarios", nome), {
+                    nome: nome, avatar: avatarSelecionado, palpiteCampeao: "", palpiteVice: "", palpiteTerceiro: "", podioSalvo: false, dataCriacao: new Date()
+                });
+                window.entrarComoJogador(nome, avatarSelecionado);
+            } catch (err) { console.error(err); }
+        });
+
         window.renderizarMuralDePalpites = () => {
             const extrairBandeira = (nomeTime) => {
                 const cod = mapaDeCodigosDeBandeiras[nomeTime?.trim()];
                 return (cod && cod !== 'n/a') ? `https://flagcdn.com/w40/${cod}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
             };
 
-            // 1. Agrupar todos os palpites recebidos pelo ID do jogo correspondente
             const palpitesPorJogo = {};
             todosOsPalpites.forEach(p => {
                 if (!palpitesPorJogo[p.jogoId]) palpitesPorJogo[p.jogoId] = [];
                 palpitesPorJogo[p.jogoId].push(p);
             });
 
-            // 2. Agrupar a lista de jogos globais pelas rodadas
             let htmlMural = "";
             const jogosPorRodada = {};
             
@@ -1143,15 +1329,13 @@
                 jogosPorRodada[rodadaChave].push(jogo);
             });
 
-            // 3. Renderizar o HTML iterando nas rodadas organizadas
             for (const rodada in jogosPorRodada) {
                 let temPalpiteNaRodada = false;
                 let htmlRodada = `<div class="secao-cronograma" style="margin-bottom: 30px;">
-                                    <div class="header-cronograma">📌${rodada}</div>`;
+                                    <div class="header-cronograma">📌 ${rodada}</div>`;
 
                 jogosPorRodada[rodada].forEach(jogo => {
                     const palpitesDoJogo = palpitesPorJogo[jogo.id];
-                    // Pula a renderização se ninguém palpitou neste jogo ainda
                     if (!palpitesDoJogo || palpitesDoJogo.length === 0) return; 
                     
                     temPalpiteNaRodada = true;
@@ -1160,7 +1344,6 @@
                     const flagA = extrairBandeira(timeA);
                     const flagB = extrairBandeira(timeB);
 
-                    // Cabeçalho do confronto
                     htmlRodada += `
                     <div class="usuario-palpites-bloco" style="margin-bottom: 20px; border-color: #cbd5e1; background: #fff;">
                         <h3 style="border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-top: 0; justify-content: center; display: flex; align-items: center; gap: 12px; font-size: 1.15em; color: var(--primary);">
@@ -1170,12 +1353,11 @@
                         </h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 15px;">`;
 
-                    // Grid dos usuários que palpitaram neste confronto específico
                     palpitesDoJogo.forEach(p => {
                         const dadosUsr = cacheUsuarios[p.usuario.toLowerCase()];
                         const avatar = dadosUsr?.avatar || '⚽';
                         htmlRodada += `
-                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all 0.2s;">
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px;">
                                 <div style="font-size: 0.9em; color: var(--primary); font-weight: 700; display: flex; align-items: center; gap: 6px;">
                                     <span>${avatar}</span> <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px;">${p.usuario}</span>
                                 </div>
@@ -1185,20 +1367,15 @@
                             </div>`;
                     });
 
-                    htmlRodada += `</div></div>`; // Fecha o grid e o bloco do confronto
+                    htmlRodada += `</div></div>`;
                 });
 
-                htmlRodada += `</div>`; // Fecha a seção cronograma
-                
-                // Apenas adiciona ao mural final se houve pelo menos um jogo com palpites na rodada
-                if (temPalpiteNaRodada) {
-                    htmlMural += htmlRodada;
-                }
+                htmlRodada += `</div>`;
+                if (temPalpiteNaRodada) htmlMural += htmlRodada;
             }
 
             document.getElementById("listaPalpites").innerHTML = htmlMural || "<div style='text-align:center; padding: 40px; color: #64748b; font-weight: 600;'>Nenhum palpite enviado ainda...</div>";
         };
-        // ------------------------------------
 
         window.atualizarTabelaSimulada = () => {
             let gruposSimulados = {};
@@ -1225,20 +1402,11 @@
                     let valA = (inputA && inputA.value !== "") ? parseInt(inputA.value) : null;
                     let valB = (inputB && inputB.value !== "") ? parseInt(inputB.value) : null;
 
-                    // Busca do rascunho se não estiver preenchido mas existir memória temporária
-                    if (valA === null && window.palpitesRascunho[jogo.id] && window.palpitesRascunho[jogo.id].a !== "") {
-                        valA = parseInt(window.palpitesRascunho[jogo.id].a);
-                    }
-                    if (valB === null && window.palpitesRascunho[jogo.id] && window.palpitesRascunho[jogo.id].b !== "") {
-                        valB = parseInt(window.palpitesRascunho[jogo.id].b);
-                    }
+                    if (valA === null && window.palpitesRascunho[jogo.id] && window.palpitesRascunho[jogo.id].a !== "") valA = parseInt(window.palpitesRascunho[jogo.id].a);
+                    if (valB === null && window.palpitesRascunho[jogo.id] && window.palpitesRascunho[jogo.id].b !== "") valB = parseInt(window.palpitesRascunho[jogo.id].b);
 
-                    if (valA === null && palpitesDoUsuarioLogado[jogo.id] && palpitesDoUsuarioLogado[jogo.id].a !== undefined) {
-                        valA = parseInt(palpitesDoUsuarioLogado[jogo.id].a);
-                    }
-                    if (valB === null && palpitesDoUsuarioLogado[jogo.id] && palpitesDoUsuarioLogado[jogo.id].b !== undefined) {
-                        valB = parseInt(palpitesDoUsuarioLogado[jogo.id].b);
-                    }
+                    if (valA === null && palpitesDoUsuarioLogado[jogo.id] && palpitesDoUsuarioLogado[jogo.id].a !== undefined) valA = parseInt(palpitesDoUsuarioLogado[jogo.id].a);
+                    if (valB === null && palpitesDoUsuarioLogado[jogo.id] && palpitesDoUsuarioLogado[jogo.id].b !== undefined) valB = parseInt(palpitesDoUsuarioLogado[jogo.id].b);
 
                     if (valA !== null && valB !== null && !isNaN(valA) && !isNaN(valB)) {
                         let tA = gruposSimulados[g][jogo.timeA];
@@ -1262,7 +1430,8 @@
                 return (cod && cod !== 'n/a') ? `https://flagcdn.com/w40/${cod}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
             };
 
-            for (let nomeGrupo in gruposSimulados) {
+            let gruposOrdenadosSimulados = Object.keys(gruposSimulados).sort();
+            gruposOrdenadosSimulados.forEach(nomeGrupo => {
                 htmlSimulada += `<h3>${nomeGrupo}</h3><table><tr style="background-color: #f2f2f2;"><th style="width: 60px;">Pos</th><th style="text-align:left; padding-left:12px;">Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>`;
                 
                 let times = Object.entries(gruposSimulados[nomeGrupo]).sort((a, b) => b[1].pts - a[1].pts || b[1].sg - a[1].sg || b[1].gp - a[1].gp);
@@ -1286,120 +1455,10 @@
                     </tr>`; 
                 });
                 htmlSimulada += `</table>`;
-            }
+            });
             const container = document.getElementById("conteudoSimulador");
             if (container) container.innerHTML = htmlSimulada || "Nenhum jogo na fase de grupos encontrado.";
         };
-
-        onSnapshot(collection(db, "palpites"), (snap) => {
-            palpitesDoUsuarioLogado = {}; todosOsPalpites = []; gruposPorUsuarioGlobais = {};
-            snap.forEach(docSnap => {
-                const p = docSnap.data(); todosOsPalpites.push(p);
-                if (nomeUsuario && p.usuario === nomeUsuario) palpitesDoUsuarioLogado[p.jogoId] = { a: p.palpiteA, b: p.palpiteB, salvo: p.salvo || false };
-                if (!gruposPorUsuarioGlobais[p.usuario]) gruposPorUsuarioGlobais[p.usuario] = [];
-                gruposPorUsuarioGlobais[p.usuario].push(p);
-            });
-
-            window.renderizarMuralDePalpites();
-            if (window.recarregarCardsDeJogos) window.recarregarCardsDeJogos();
-            calcularEExibirRanking();
-            if (window.atualizarTabelaSimulada) window.atualizarTabelaSimulada();
-        });
-
-        const q = query(collection(db, "jogos"), orderBy("rodada"), orderBy("hora"));
-        onSnapshot(q, (snapshot) => {
-            listaDeJogosGlobais = [];
-            snapshot.forEach(docSnap => { 
-                const jogo = docSnap.data(); 
-                jogo.id = docSnap.id; 
-                listaDeJogosGlobais.push(jogo); 
-                
-                // Popula o mapa auxiliar de bandeiras usando os códigos salvos nos jogos
-                if(jogo.timeA && jogo.codigoA) mapaDeCodigosDeBandeiras[jogo.timeA] = jogo.codigoA;
-                if(jogo.timeB && jogo.codigoB) mapaDeCodigosDeBandeiras[jogo.timeB] = jogo.codigoB;
-            });
-
-            window.recarregarCardsDeJogos = () => {
-                let juegosPorData = {}; let jogosPorMataMata = {}; let grupos = {};
-                listaDeJogosGlobais.forEach((jogo) => {
-                    if (jogo.fase === "grupos" || (!jogo.fase && jogo.grupo)) {
-                        const g = bundleGrupo(jogo.grupo); if (!grupos[g]) grupos[g] = {};
-                        [jogo.timeA, jogo.timeB].forEach(time => { if (time && !grupos[g][time]) grupos[g][time] = { pts: 0, j: 0, v: 0, e: 0, d: 0, sg: 0 }; });
-                        if (jogo.status === 'em andamento' || jogo.status === 'finalizado') {
-                            const pA = isNaN(parseInt(jogo.placarA)) ? 0 : parseInt(jogo.placarA);
-                            const pB = isNaN(parseInt(jogo.placarB)) ? 0 : parseInt(jogo.placarB);
-                            if (grupos[g][jogo.timeA] && grupos[g][jogo.timeB]) {
-                                grupos[g][jogo.timeA].j++; grupos[g][jogo.timeB].j++;
-                                if (pA > pB) { grupos[g][jogo.timeA].pts += 3; grupos[g][jogo.timeA].v++; grupos[g][jogo.timeB].d++; }
-                                else if (pB > pA) { grupos[g][jogo.timeB].pts += 3; grupos[g][jogo.timeB].v++; grupos[g][jogo.timeA].d++; }
-                                else { grupos[g][jogo.timeA].pts += 1; grupos[g][jogo.timeB].pts += 1; grupos[g][jogo.timeA].e++; grupos[g][jogo.timeB].e++; }
-                                grupos[g][jogo.timeA].sg += (pA - pB); grupos[g][jogo.timeB].sg += (pB - pA);
-                            }
-                        }
-                        const dataChave = jogo.data || "Data a definir";
-                        if (!juegosPorData[dataChave]) juegosPorData[dataChave] = []; juegosPorData[dataChave].push(jogo);
-                    } else if (jogo.fase) {
-                        if (!jogosPorMataMata[jogo.fase]) jogosPorMataMata[jogo.fase] = []; jogosPorMataMata[jogo.fase].push(jogo);
-                    }
-                });
-
-                function bundleGrupo(val){ 
-                    if (!val) return 'Sem Grupo';
-                    let grupoLimpo = val.replace('Grupo ', '').trim();
-                    return 'Grupo ' + grupoLimpo; 
-                }
-
-                let htmlJogosGrupos = "";
-                for (let data in juegosPorData) {
-                    htmlJogosGrupos += `<div class="secao-cronograma"><div class="header-cronograma">📅 Dia ${data}</div><div class="grid-jogos">`;
-                    juegosPorData[data].forEach(j => { htmlJogosGrupos += gerarCard(j); }); htmlJogosGrupos += `</div></div>`;
-                }
-                let htmlMataMata = "";
-                for (let fase in jogosPorMataMata) {
-                    htmlMataMata += `<div class="secao-cronograma"><div class="header-cronograma">🏆 ${fase.toUpperCase()}</div><div class="grid-jogos">`;
-                    jogosPorMataMata[fase].forEach(j => { htmlMataMata += gerarCard(j); }); htmlMataMata += `</div></div>`;
-                }
-                
-                let htmlTabela = "";
-                const extrairBandeiraTabela = (nomeTime) => {
-                    const cod = mapaDeCodigosDeBandeiras[nomeTime];
-                    return (cod && cod !== 'n/a') ? `https://flagcdn.com/w40/${cod}.png` : 'https://cdn-icons-png.flaticon.com/512/1200/1200792.png';
-                };
-
-                for (let nomeGrupo in grupos) {
-                    htmlTabela += `<h3>${nomeGrupo}</h3><table><tr style="background-color: #f2f2f2;"><th style="width: 60px;">Pos</th><th style="text-align:left; padding-left:12px;">Time</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th><th>Pts</th></tr>`;
-                    let times = Object.entries(grupos[nomeGrupo]).sort((a, b) => b[1].pts - a[1].pts || b[1].sg - a[1].sg);
-                    
-                    times.forEach(([time, s], index) => { 
-                        htmlTabela += `
-                        <tr>
-                            <td><strong>${index + 1}º</strong></td>
-                            <td>
-                                <div class="tabela-time-celula">
-                                    <img src="${extrairBandeiraTabela(time)}" width="22" height="15" style="object-fit:cover; border-radius:2px; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
-                                    <span>${time}</span>
-                                </div>
-                            </td>
-                            <td>${s.j}</td>
-                            <td>${s.v}</td>
-                            <td>${s.e}</td>
-                            <td>${s.d}</td>
-                            <td>${s.sg}</td>
-                            <td><strong>${s.pts}</strong></td>
-                        </tr>`; 
-                    });
-                    htmlTabela += `</table>`;
-                }
-                document.getElementById("conteudoTabela").innerHTML = htmlTabela;
-                document.getElementById("placarContainer").innerHTML = htmlJogosGrupos;
-                document.getElementById("mataMataContainer").innerHTML = htmlMataMata;
-                
-                if (window.atualizarTabelaSimulada) window.atualizarTabelaSimulada();
-            };
-            window.recarregarCardsDeJogos();
-            window.renderizarMuralDePalpites();
-            calcularEExibirRanking();
-        });
 
         function calcularEExibirRanking() {
             if (listaDeJogosGlobais.length === 0) return;
@@ -1408,8 +1467,7 @@
             for (let chave in cacheUsuarios) {
                 const usr = cacheUsuarios[chave];
                 pontuacaoJogadores[usr.nome] = {
-                    nome: usr.nome, avatar: usr.avatar, totalPontos: 0,
-                    exatos: 0, vencedor: 0, bonusPodio: 0
+                    nome: usr.nome, avatar: usr.avatar, totalPontos: 0, exatos: 0, vencedor: 0, bonusPodio: 0
                 };
             }
 
@@ -1430,13 +1488,11 @@
 
                     let pontosDoJogo = 0;
 
-                    // 1. REGLA DO RESULTADO (Placar Exato) -> Ganha +2 pontos se acertar perfeitamente
                     if (pA === jA && pB === jB) {
                         pontosDoJogo += 2;
                         pontuacaoJogadores[p.usuario].exatos++;
                     }
 
-                    // 2. REGRA DO VENCEDOR (Acertar quem ganha ou se empata) -> Ganha +3 pontos
                     const ganhouA_Oficial = jA > jB; const ganhouB_Oficial = jB > jA; const empate_Oficial = jA === jB;
                     const ganhouA_Palpite = pA > pB; const ganhouB_Palpite = pB > pA; const empate_Palpite = pA === pB;
 
@@ -1449,7 +1505,6 @@
                 }
             });
 
-            // 3. REGRA DO PRIMEIRO, SEGUNDO E TERCEIRO LUGAR (Bônus de pódio final)
             for (let nome in pontuacaoJogadores) {
                 let usrData = cacheUsuarios[nome.toLowerCase()];
                 if (usrData) {
@@ -1497,29 +1552,22 @@
 
         function verificarBloqueio(dataStr, horaStr) {
             if (!dataStr || !horaStr) return false;
-            const partesData = dataStr.split("-"); const apenasHora = horaStr.replace(" Brasília", "").trim().split(":");
+            const partesData = dataStr.split("-"); 
+            const apenasHora = horaStr.replace(" Brasília", "").trim().split(":");
             if (partesData.length !== 3 || apenasHora.length !== 2) return false;
             return ((new Date(parseInt(partesData[2]), parseInt(partesData[1]) - 1, parseInt(partesData[0]), parseInt(apenasHora[0]), parseInt(apenasHora[1])) - new Date()) / 1000 / 60) <= 10;
         }
 
         window.enviarPalpite = async (jogoId, timeA, timeB, dataJogo, horaJogo) => {
             if (!nomeUsuario) return alert("Identifique-se primeiro!");
-            
-            // Verifica se já existia palpite salvo localmente
-            if (palpitesDoUsuarioLogado[jogoId] && palpitesDoUsuarioLogado[jogoId].salvo === true) {
-                return alert("❌ Esse palpite já foi salvo e não pode mais ser alterado!");
-            }
+            if (palpitesDoUsuarioLogado[jogoId] && palpitesDoUsuarioLogado[jogoId].salvo === true) return alert("❌ Esse palpite já foi salvo e trancado!");
             if (verificarBloqueio(dataJogo, horaJogo)) return alert("Jogo trancado!");
             
             const pA = document.getElementById(`palpA_${jogoId}`).value; 
             const pB = document.getElementById(`palpB_${jogoId}`).value;
             if (pA === "" || pB === "") return alert("Insira os placares!");
+            if (!confirm("Atenção! Uma vez salvo, você não poderá mais editar esse palpite. Confirmar?")) return;
 
-            if (!confirm("Atenção! Uma vez salvo, você não poderá mais editar esse palpite. Confirmar?")) {
-                return;
-            }
-
-            // Desabilita visualmente na hora para evitar duplo clique
             document.getElementById(`palpA_${jogoId}`).disabled = true;
             document.getElementById(`palpB_${jogoId}`).disabled = true;
             const btn = document.querySelector(`button[onclick*='${jogoId}']`);
@@ -1544,20 +1592,14 @@
             
             const palpiteExistente = palpitesDoUsuarioLogado[jogo.id];
             const rascunho = window.palpitesRascunho[jogo.id];
-
-            // Bloqueia caso o tempo do jogo expire OU caso o usuário já tenha marcado como salvo
             const jaEstaSalvo = palpiteExistente && palpiteExistente.salvo === true;
             const estaBloqueado = verificarBloqueio(jogo.data, jogo.hora) || jaEstaSalvo;
 
             let statusTextoVisual = jogo.status || '';
-            if (verificarBloqueio(jogo.data, jogo.hora)) {
-                statusTextoVisual = 'Encerrado';
-            } else if (statusTextoVisual.toLowerCase() === 'agendada') {
-                statusTextoVisual = '';
-            }
+            if (verificarBloqueio(jogo.data, jogo.hora)) statusTextoVisual = 'Encerrado';
+            else if (statusTextoVisual.toLowerCase() === 'agendada') statusTextoVisual = '';
 
-            let displayPlacarA = '-';
-            let displayPlacarB = '-';
+            let displayPlacarA = '-'; let displayPlacarB = '-';
             if (jogo.status === 'em andamento' || jogo.status === 'finalizado') {
                 displayPlacarA = isNaN(parseInt(jogo.placarA)) ? '0' : parseInt(jogo.placarA);
                 displayPlacarB = isNaN(parseInt(jogo.placarB)) ? '0' : parseInt(jogo.placarB);
@@ -1568,21 +1610,12 @@
 
             const grupoVisual = jogo.grupo ? (jogo.grupo.includes('Grupo') ? jogo.grupo : 'Grupo ' + jogo.grupo) : 'Mata-Mata';
 
-            // Define os valores que aparecem nos campos com base no que foi salvo ou digitado!
-            let valA = '';
-            let valB = '';
-            
-            if (palpiteExistente && palpiteExistente.a !== undefined) {
-                valA = palpiteExistente.a;
-            } else if (rascunho && rascunho.a !== undefined) {
-                valA = rascunho.a;
-            }
+            let valA = ''; let valB = '';
+            if (palpiteExistente && palpiteExistente.a !== undefined) valA = palpiteExistente.a;
+            else if (rascunho && rascunho.a !== undefined) valA = rascunho.a;
 
-            if (palpiteExistente && palpiteExistente.b !== undefined) {
-                valB = palpiteExistente.b;
-            } else if (rascunho && rascunho.b !== undefined) {
-                valB = rascunho.b;
-            }
+            if (palpiteExistente && palpiteExistente.b !== undefined) valB = palpiteExistente.b;
+            else if (rascunho && rascunho.b !== undefined) valB = rascunho.b;
 
             return `
             <div class="card">
