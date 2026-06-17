@@ -1066,8 +1066,8 @@
                 const activeId = document.activeElement ? document.activeElement.id : null;
                 const selectionStart = document.activeElement ? document.activeElement.selectionStart : null;
 
-                // Modificação 1: Agrupar por 'Grupo' em vez de 'Data'
-                let jogosPorGrupo = {}; 
+                // Modificação: Separar os dados por Data (para Fase de Grupos)
+                let jogosPorData = {}; 
                 let jogosPorMataMata = {}; 
                 let grupos = {};
 
@@ -1075,7 +1075,6 @@
                     if (jogo.fase === "grupos" || (!jogo.fase && jogo.grupo)) {
                         const g = bundleGrupo(jogo.grupo); 
                         if (!grupos[g]) grupos[g] = {};
-                        if (!jogosPorGrupo[g]) jogosPorGrupo[g] = [];
 
                         [jogo.timeA, jogo.timeB].forEach(time => { if (time && !grupos[g][time]) grupos[g][time] = { pts: 0, j: 0, v: 0, e: 0, d: 0, sg: 0 }; });
                         
@@ -1091,7 +1090,11 @@
                             }
                         }
                         
-                        jogosPorGrupo[g].push(jogo);
+                        // Agrupa pela "Data" para renderizar a aba de Palpites
+                        const dataChave = jogo.data || "Data a definir";
+                        if (!jogosPorData[dataChave]) jogosPorData[dataChave] = [];
+                        jogosPorData[dataChave].push(jogo);
+
                     } else if (jogo.fase) {
                         if (!jogosPorMataMata[jogo.fase]) jogosPorMataMata[jogo.fase] = []; 
                         jogosPorMataMata[jogo.fase].push(jogo);
@@ -1105,15 +1108,14 @@
                 }
 
                 let htmlJogosGrupos = "";
-                // Ordena alfabeticamente para exibir Grupo A, Grupo B, etc.
-                let gruposOrdenados = Object.keys(jogosPorGrupo).sort();
-                gruposOrdenados.forEach(grupo => {
-                    htmlJogosGrupos += `<div class="secao-cronograma"><div class="header-cronograma">📊 ${grupo}</div><div class="grid-jogos">`;
-                    jogosPorGrupo[grupo].forEach(j => { htmlJogosGrupos += gerarCard(j); }); 
+                // Ordena e exibe pela Data
+                let datasOrdenadas = Object.keys(jogosPorData).sort();
+                datasOrdenadas.forEach(data => {
+                    htmlJogosGrupos += `<div class="secao-cronograma"><div class="header-cronograma">📅 Fase de Grupos - ${data}</div><div class="grid-jogos">`;
+                    jogosPorData[data].forEach(j => { htmlJogosGrupos += gerarCard(j); }); 
                     htmlJogosGrupos += `</div></div>`;
                 });
 
-                // Modificação 2: Ajuste no HTML do Mata-Mata para a estrutura horizontal contínua
                 let htmlMataMata = `<div class="bracket-wrapper"><div class="bracket-container">`;
                 const ordemFases = ["16", "oitavas", "quartas", "semi", "terceiro", "final"];
                 let fasesOrdenadas = Object.keys(jogosPorMataMata).sort((a, b) => {
