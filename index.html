@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -791,6 +792,93 @@
             background-color: #94a3b8;
             z-index: 1;
         }
+        /* --- MENU SANDUÍCHE (MOBILE) --- */
+        .btn-sanduiche {
+            display: none;
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 1em;
+            border: none;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: var(--transition);
+        }
+
+        .btn-sanduiche:hover {
+            background: var(--primary-light);
+        }
+
+        /* Regras exclusivas para telas de celular (até 800px) */
+        @media (max-width: 800px) {
+            .btn-sanduiche {
+                display: flex;
+            }
+            
+            .tabs {
+                display: none; /* Esconde as abas por padrão no celular */
+                flex-direction: column;
+                gap: 10px;
+                background: transparent;
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                position: static;
+            }
+
+            .tabs.aberto {
+                display: flex; /* Exibe o menu quando a classe 'aberto' é injetada via JS */
+                animation: fadeIn 0.3s ease;
+            }
+
+            .tab-btn {
+                background: white;
+                border: 1px solid #e2e8f0;
+                justify-content: center;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            }
+            
+            .tab-btn.active {
+                box-shadow: none;
+            }
+
+            /* Ajustes para evitar que o cabeçalho quebre no mobile */
+            .main-header {
+                padding: 0 15px;
+            }
+
+            .logo-placeholder span {
+                display: none; /* Esconde o texto da logo no celular para priorizar o perfil */
+            }
+
+            .user-top-profile {
+                gap: 8px;
+            }
+
+            .btn-header {
+                padding: 6px 10px;
+                font-size: 0.75em;
+            }
+            
+            .user-badge {
+                padding: 6px 12px;
+            }
+            
+            /* Encurta nomes de usuário muito longos no topo */
+            #userNameDisplay {
+                max-width: 70px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
     </style>
 </head>
 
@@ -870,6 +958,11 @@
     </div>
 
     <main id="mainContent" class="page-container" style="display: none;">
+        
+        
+        <button id="btnSanduiche" class="btn-sanduiche" onclick="toggleMenuMobile()">
+            <span style="font-size: 1.4em; margin-top: -2px;">☰</span> Menu
+        </button>          
         
         <nav class="tabs">
             <button class="tab-btn active" onclick="mudarTab(event, 'aba-ranking')">🥇 Ranking do Bolão</button>
@@ -1215,11 +1308,21 @@
             }
         };
 
+        // Função para alternar o menu sanduíche no mobile
+        window.toggleMenuMobile = () => {
+            document.querySelector('.tabs').classList.toggle('aberto');
+        };
+
+        // Função mudarTab atualizada para fechar o menu ao selecionar uma opção
         window.mudarTab = (evt, tabId) => {
             document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).style.display = 'block';
             evt.currentTarget.classList.add('active');
+            
+            // Fecha o menu mobile após o clique
+            document.querySelector('.tabs').classList.remove('aberto');
+            
             if (tabId === 'aba-jogos') window.renderizarCascataPodio();
         };
 
